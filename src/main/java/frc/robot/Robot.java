@@ -56,10 +56,15 @@ public class Robot extends TimedRobot {
     //camera2.setResolution(160, 120);
     camera2.setFPS(14);
     camera2.setPixelFormat(PixelFormat.kYUYV); //formats video specifications for cameras
+
+    driveTrain.calibrate();
+    driveTrain.reset();
   }
 
   @Override
   public void robotPeriodic() {
+    System.out.println("Gyro reading: " + driveTrain.getAngle());
+
   }
 
   /*
