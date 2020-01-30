@@ -16,8 +16,10 @@ public class GyroButton extends Command {
 
   private OI oi;
   private DriveTrain driveTrain;
-  private static double angle = 180;
+  private static double currentAngle;
+  private static double desiredAngle = 180;
   private static final double tolerance = 15;
+  private static final double smallTolerance = .1;
 
   public GyroButton() {
     requires(Robot.driveTrain);
@@ -34,34 +36,33 @@ public class GyroButton extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
+  
 
-   //angle = driveTrain.getAngle();
-   //angle = angle - 180;
-   driveTrain.drive(0.5, -0.5);
-
-   if(angle < driveTrain.getAngle()+tolerance && angle > driveTrain.getAngle())
-   {
-       driveTrain.drive(0, 0);
-   }
-
-   /*while(angle >= driveTrain.getAngle()+tolerance || angle <= driveTrain.getAngle()-tolerance)
-   {
-     driveTrain.drive(0.5,-0.5);
-     //System.out.println("YEET");
-   }
-   System.out.println("NOT YEETING");
-   driveTrain.drive(0, 0);*/
-   
-/*if(angle <= driveTrain.getAngle()+tolerance && angle >= driveTrain.getAngle()-tolerance)
-{
-    driveTrain.drive(0,0);
-}*/
+    if(driveTrain.getAngle()-360 <= Math.abs(smallTolerance))
+    {
+      currentAngle = 0; 
+    } else {
+      currentAngle = driveTrain.getAngle();
+    }
+    if(desiredAngle < driveTrain.getAngle()+tolerance && desiredAngle > driveTrain.getAngle()-tolerance)
+    {
+      driveTrain.drive(0, 0);
+    }else{
+      driveTrain.drive(-0.5, 0.5);
+    }
+    System.out.println(currentAngle);
+    
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return false;
+    if(desiredAngle < driveTrain.getAngle()+tolerance && desiredAngle > driveTrain.getAngle()-tolerance)
+    {
+      return true;
+    }else{
+      return false;
+    }
   }
 
   // Called once after isFinished returns true
@@ -74,4 +75,9 @@ public class GyroButton extends Command {
   @Override
   protected void interrupted() {
   }
+
+  public static double printAngle() {
+    return GyroButton.currentAngle;
+  }
+
 }

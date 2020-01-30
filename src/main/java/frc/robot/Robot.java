@@ -13,6 +13,7 @@ import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import frc.robot.commands.GyroButton;
 import frc.robot.subsystems.DriveTrain;
 
 /**
@@ -64,7 +65,7 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     System.out.println("Gyro reading: " + driveTrain.getAngle());
-
+    System.out.println("Current Angle Rading: " + GyroButton.printAngle());
   }
 
   /*
