@@ -59,6 +59,8 @@ public class Robot extends TimedRobot {
     //camera2.setResolution(160, 120);
     camera2.setFPS(14);
     camera2.setPixelFormat(PixelFormat.kYUYV); //formats video specifications for cameras
+
+    driveTrain.reset();
   }
 
   @Override
