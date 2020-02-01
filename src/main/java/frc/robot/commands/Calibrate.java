@@ -12,15 +12,14 @@ import frc.robot.OI;
 import frc.robot.Robot;
 import frc.robot.subsystems.DriveTrain;
 
-public class GyroButton extends Command {
+public class Calibrate extends Command {
 
   private OI oi;
   private DriveTrain driveTrain;
-  private static double currentAngle;
-  private static double desiredAngle = 180;
-  private static final double tolerance = 5;
+  private static final double smallTolerance = .1;
+  
 
-  public GyroButton() {
+  public Calibrate() {
     requires(Robot.driveTrain);
   }
 
@@ -35,23 +34,13 @@ public class GyroButton extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-  
-    if(desiredAngle < driveTrain.getAngle()+tolerance && desiredAngle > driveTrain.getAngle()-tolerance) {
-      driveTrain.drive(0, 0);
-    } else {
-      driveTrain.drive(-0.5, 0.5);
-    }
-    System.out.println(currentAngle);    
+    driveTrain.calibrate();
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    if(desiredAngle < Robot.getCurrentAngle()+tolerance && desiredAngle > Robot.getCurrentAngle()-tolerance) {
-      return true;
-    } else {
-      return false;
-    }
+    return Math.abs(driveTrain.getAngle()) <= smallTolerance;
   }
 
   // Called once after isFinished returns true

@@ -27,6 +27,8 @@ public class Robot extends TimedRobot {
 
   public static DriveTrain driveTrain;
   public static OI oi;
+  private static double currentAngle;
+  private static final double smallTolerance = .1;
 
   //USB Camera declarations
   public static CameraServer cameraServer;
@@ -57,15 +59,19 @@ public class Robot extends TimedRobot {
     //camera2.setResolution(160, 120);
     camera2.setFPS(14);
     camera2.setPixelFormat(PixelFormat.kYUYV); //formats video specifications for cameras
-
-    driveTrain.calibrate();
-    driveTrain.reset();
   }
 
   @Override
   public void robotPeriodic() {
-    System.out.println("Gyro reading: " + driveTrain.getAngle());
-    System.out.println("Current Angle Rading: " + GyroButton.printAngle());
+    System.out.println("Gyro Reading: " + driveTrain.getAngle());
+    
+    if(driveTrain.getAngle()%360 == 0)
+    {
+      currentAngle = driveTrain.getAngle();
+    } else {
+      currentAngle = Math.abs(driveTrain.getAngle()%360);
+    }
+    System.out.println("Current Angle Rading: " + currentAngle);
   }
 
   /*
@@ -104,7 +110,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-    System.out.println("yeet");
+    //System.out.println("yeet");
     Scheduler.getInstance().run();
   }
   
@@ -119,5 +125,9 @@ public class Robot extends TimedRobot {
   @Override
   public void testPeriodic() {
 
+  }
+
+  public static double getCurrentAngle() {
+     return Robot.currentAngle;
   }
 }
