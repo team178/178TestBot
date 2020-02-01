@@ -56,7 +56,7 @@ public class DriveTrain extends Subsystem {
   }
 
   public double getAngle() {
-    return gyro.getAngle();
+    return -gyro.getAngle();
   }
 
   @Override

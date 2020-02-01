@@ -16,7 +16,7 @@ public class Move90Degrees extends Command {
 
   private OI oi;
   private DriveTrain driveTrain;
-  private static double currentAngle;
+  //private static double currentAngle;
   private static double increment = 90;
   private static final double tolerance = 5;
   
@@ -36,26 +36,26 @@ public class Move90Degrees extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-      if(currentAngle > 0 && currentAngle < 90) {
-        if(increment < Robot.getCurrentAngle()+tolerance && increment > Robot.getCurrentAngle()-tolerance) {
+      if(Robot.getCurrentAngle() > 270 && Robot.getCurrentAngle() < 360) {
+        if(increment*4 < Robot.getCurrentAngle()+tolerance && increment > Robot.getCurrentAngle()-tolerance) {
             driveTrain.drive(0, 0);
         } else {
             driveTrain.drive(-0.5, 0.5);
         }
-      } else if(currentAngle > 90 && currentAngle < 180) {
-        if(increment*2 < Robot.getCurrentAngle()+tolerance && increment*2 > Robot.getCurrentAngle()-tolerance) {
-            driveTrain.drive(0, 0);
-        } else {
-            driveTrain.drive(-0.5, 0.5);
-        }
-      } else if(currentAngle > 180 && currentAngle < 270) {
+      } else if(Robot.getCurrentAngle() > 180 && Robot.getCurrentAngle() < 270) {
         if(increment*3 < Robot.getCurrentAngle()+tolerance && increment*3 > Robot.getCurrentAngle()-tolerance) {
             driveTrain.drive(0, 0);
         } else {
             driveTrain.drive(-0.5, 0.5);
         }
-      } else if(currentAngle > 270 && currentAngle < 360) {
-        if(increment*4 < Robot.getCurrentAngle()+tolerance && increment*4 > Robot.getCurrentAngle()-tolerance) {
+      } else if(Robot.getCurrentAngle() > 90 && Robot.getCurrentAngle() < 180) {
+        if(increment*2 < Robot.getCurrentAngle()+tolerance && increment*2 > Robot.getCurrentAngle()-tolerance) {
+            driveTrain.drive(0, 0);
+        } else {
+            driveTrain.drive(-0.5, 0.5);
+        }
+      } else if(Robot.getCurrentAngle() > 0 && Robot.getCurrentAngle() < 90) {
+        if(increment < Robot.getCurrentAngle()+tolerance && increment > Robot.getCurrentAngle()-tolerance) {
             driveTrain.drive(0, 0);
         } else {
             driveTrain.drive(-0.5, 0.5);
@@ -66,7 +66,12 @@ public class Move90Degrees extends Command {
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return false;
+    if( (Robot.getCurrentAngle() > 70 && Robot.getCurrentAngle() < 90)||(Robot.getCurrentAngle() > 160 && Robot.getCurrentAngle() < 180)||
+    (Robot.getCurrentAngle() > 250 && Robot.getCurrentAngle() < 270)||(Robot.getCurrentAngle() > 340 && Robot.getCurrentAngle() < 360) ) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   // Called once after isFinished returns true

@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import frc.robot.commands.Calibrate;
 import frc.robot.commands.GyroButton;
+import frc.robot.commands.Move90Degrees;
 
 public class OI {
     //JOYSTICK buttons
@@ -45,8 +46,9 @@ public class OI {
     public Button auxStart = new JoystickButton(xboxAux, 8);
     
     public OI() {
-		rightPadBottom1.whenPressed(new GyroButton());
+		rightPadBottom1.whenPressed(new GyroButton(180));
 		rightPadBottom2.whenPressed(new Calibrate());
+		rightPadBottom3.whenPressed(new Move90Degrees());
     }
 
     public double getX() {

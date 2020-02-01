@@ -12,17 +12,17 @@ import frc.robot.OI;
 import frc.robot.Robot;
 import frc.robot.subsystems.DriveTrain;
 
-public class GyroButton extends Command {
+public class AnotherMove90Degrees extends Command {
 
   private OI oi;
   private DriveTrain driveTrain;
-  private static double currentAngle;
+  //private static double currentAngle;
   private static double desiredAngle;
-  private static final double tolerance = 10;
+  private static final double tolerance = 5;
+  
 
-  public GyroButton(double angle) {
+  public AnotherMove90Degrees() {
     requires(Robot.driveTrain);
-    desiredAngle = angle;
   }
 
   // Called just before this Command runs the first time
@@ -36,22 +36,13 @@ public class GyroButton extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    if(desiredAngle-10 < (Robot.getCurrentAngle() + tolerance) && desiredAngle-10 > (Robot.getCurrentAngle() - tolerance)) {
-      driveTrain.drive(0.5, -0.5);
-    } else {
-      driveTrain.drive(-0.5, 0.5);
-    }
-    System.out.println(currentAngle);    
+      
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    if(desiredAngle-10 < (Robot.getCurrentAngle()+tolerance) && desiredAngle-10 > (Robot.getCurrentAngle()-tolerance)) {
-      return true;
-    } else {
-      return false;
-    }
+    return false;
   }
 
   // Called once after isFinished returns true
