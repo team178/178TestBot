@@ -39,6 +39,10 @@ public class DriveTrain extends Subsystem {
 	  right1 = new VictorSPX(RobotMap.DMTopRight);
 	  right2 = new VictorSPX(RobotMap.DMBottomRight);
 	  
+	  //Set victors to slaves
+	  left2.follow(left1);
+	  right2.follow(right1);
+	  
 	  //Config left motor & sensor directions
 	  left1.setInverted(true);
 	  left1.setSensorPhase(true);
@@ -48,10 +52,6 @@ public class DriveTrain extends Subsystem {
 	  right1.setInverted(false);
 	  right1.setSensorPhase(false);
 	  right2.setInverted(InvertType.FollowMaster);
-	  
-	  //Set victors to slaves
-	  left2.follow(left1);
-	  right2.follow(right1);
   }
   
   public void drive(double leftPower, double rightPower) {
