@@ -33,18 +33,30 @@ public class DriveTrain extends Subsystem {
   private final Gyro gyro = new ADXRS450_Gyro(sPort);
     
   public DriveTrain() {
-	  //DM initializations
+	  //Init DMs
 	  left1 = new VictorSPX(RobotMap.DMTopLeft);
 	  left2 = new VictorSPX(RobotMap.DMBottomLeft);
 	  right1 = new VictorSPX(RobotMap.DMTopRight);
 	  right2 = new VictorSPX(RobotMap.DMBottomRight);
+	  
+	  //Config left motor & sensor directions
+	  left1.setInverted(true);
+	  left1.setSensorPhase(true);
+	  left2.setInverted(InvertType.FollowMaster);
+	  
+	  //Config right motor & sensor directions
+	  right1.setInverted(false);
+	  right1.setSensorPhase(false);
+	  right2.setInverted(InvertType.FollowMaster);
+	  
+	  //Set victors to slaves
+	  left2.follow(left1);
+	  right2.follow(right1);
   }
   
   public void drive(double leftPower, double rightPower) {
-    left1.set(ControlMode.PercentOutput, -leftPower);
-    left2.set(ControlMode.PercentOutput, -leftPower);
+    left1.set(ControlMode.PercentOutput, leftPower);
     right1.set(ControlMode.PercentOutput, rightPower);
-    right2.set(ControlMode.PercentOutput, rightPower);
   }
 
   public void calibrate() {
