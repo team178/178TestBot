@@ -12,17 +12,14 @@ import frc.robot.OI;
 import frc.robot.Robot;
 import frc.robot.subsystems.DriveTrain;
 
-public class JoystickDrive extends Command {
+public class Calibrate extends Command {
 
   private OI oi;
   private DriveTrain driveTrain;
+  private static final double smallTolerance = .1;
   
-  private double yVal;
-  private double twistVal;
-  private double yReduction;
-  private double twistReduction;
 
-  public JoystickDrive() {
+  public Calibrate() {
     requires(Robot.driveTrain);
   }
 
@@ -31,30 +28,19 @@ public class JoystickDrive extends Command {
   protected void initialize() {
     oi = Robot.oi;
     driveTrain = Robot.driveTrain;
+
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    //Determine reductions
-    yReduction = oi.trigger.get() ? 0.5 : 1;
-    twistReduction = oi.trigger.get() ? 0.4 : 1;
-    
-    //Determine drive values
-    yVal = oi.getY() * yReduction;
-    twistVal = oi.getTwist() * twistReduction;
-    //Apply drive values
-    if(Math.abs(yVal) > 0.1 || Math.abs(twistVal) > 0.1) { 
-      driveTrain.drive(yVal+twistVal, yVal-twistVal);
-    } else {
-      driveTrain.drive(0,0);
-    }
+    driveTrain.reset();
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return false;
+    return Math.abs(driveTrain.getAngle()) <= smallTolerance;
   }
 
   // Called once after isFinished returns true
@@ -67,4 +53,5 @@ public class JoystickDrive extends Command {
   @Override
   protected void interrupted() {
   }
+
 }
