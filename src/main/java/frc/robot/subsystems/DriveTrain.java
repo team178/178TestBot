@@ -14,10 +14,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.RobotMap;
 import frc.robot.commands.JoystickDrive;
 
-/**
- * Add your docs here.
- */
-public class DriveTrain extends Subsystem {
+public class DriveTrain extends SubsystemBase {
   
   //DM declarations
   public static VictorSPX left1;
@@ -41,7 +38,7 @@ public class DriveTrain extends Subsystem {
   }
 
   @Override
-  public void initDefaultCommand() {
+  public void periodic() {
     setDefaultCommand(new JoystickDrive());
   }
 }
