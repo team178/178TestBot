@@ -78,8 +78,12 @@ public class DriveTrain extends Subsystem {
   }
 
   @Override
+<<<<<<< HEAD
   public void initDefaultCommand()
   {
     setDefaultCommand(new JoystickDrive());
+=======
+  protected void initDefaultCommand() {
+>>>>>>> master
   }
 }
