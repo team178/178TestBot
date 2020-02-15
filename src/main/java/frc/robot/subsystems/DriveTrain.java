@@ -8,6 +8,7 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -73,6 +74,12 @@ public class DriveTrain extends Subsystem {
 
   @Override
   public void periodic() {
+    setDefaultCommand(new JoystickDrive());
+  }
+
+  @Override
+  public void initDefaultCommand()
+  {
     setDefaultCommand(new JoystickDrive());
   }
 }
