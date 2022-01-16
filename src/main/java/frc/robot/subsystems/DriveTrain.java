@@ -9,7 +9,10 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.InvertType;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
+
+
 
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
@@ -26,18 +29,18 @@ public class DriveTrain extends Subsystem {
   private final SPI.Port sPort = SPI.Port.kOnboardCS0;
   
   //DM declarations
-  public static VictorSPX left1;
+  public static TalonSRX left1;
   public static VictorSPX left2;
-  public static VictorSPX right1;
+  public static TalonSRX right1;
   public static VictorSPX right2;
 
   private final Gyro gyro = new ADXRS450_Gyro(sPort);
     
   public DriveTrain() {
 	  //Init DMs
-	  left1 = new VictorSPX(RobotMap.DMTopLeft);
+	  left1 = new TalonSRX(RobotMap.DMTopLeft);
 	  left2 = new VictorSPX(RobotMap.DMBottomLeft);
-	  right1 = new VictorSPX(RobotMap.DMTopRight);
+	  right1 = new TalonSRX(RobotMap.DMTopRight);
 	  right2 = new VictorSPX(RobotMap.DMBottomRight);
 	  
 	  //Set victors to slaves
