@@ -78,6 +78,10 @@ public class OI {
 	public double getRightStickYAux() {
 		return xboxAux.getRawAxis(5);
 	}
+
+	public double getRightStickXAux() {
+		return -xboxAux.getRawAxis(4);
+	}
 	
 	public double getLeftTriggerAux() {
 		return xboxAux.getRawAxis(2);
