@@ -12,14 +12,13 @@ import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
-
-
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import frc.robot.RobotMap;
 import frc.robot.commands.JoystickDrive;
+import frc.robot.commands.XboxJoystickDrive;
 
 /**
  * Add your docs here.
@@ -77,12 +76,14 @@ public class DriveTrain extends Subsystem {
 
   @Override
   public void periodic() {
-    setDefaultCommand(new JoystickDrive());
+    // setDefaultCommand(new JoystickDrive());
+    setDefaultCommand(new XboxJoystickDrive());
   }
 
   @Override
   public void initDefaultCommand()
   {
-    setDefaultCommand(new JoystickDrive());
+    // setDefaultCommand(new JoystickDrive());
+    setDefaultCommand(new XboxJoystickDrive());
   }
 }
