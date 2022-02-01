@@ -34,6 +34,11 @@ public class RobotContainer {
   //Creates joystick object for the Main and Aux controllers
   private final Joysticks m_joystick = new Joysticks();
 
+  //USB Camera declarations
+  private final CameraServer cameraServer;
+  private final UsbCamera camera1;
+  private final UsbCamera camera2;
+
   // Create SmartDashboard chooser for autonomous routines
   private final SendableChooser<Command> m_chooser = new SendableChooser<>();
 
@@ -46,6 +51,21 @@ public class RobotContainer {
         //new TankDrive(m_joystick.getLeftY(), m_joystick.getRightY(), m_drivetrain));
     m_drivetrain.setDefaultCommand(
         new TankDrive(m_joystick::getLeftStickYAux, m_joystick::getRightStickYAux, m_drivetrain));
+
+    //Camera initializations
+    cameraServer = CameraServer.getInstance();
+    
+    //Camera 1
+    camera1 = cameraServer.startAutomaticCapture("cam0", 0);
+    //camera1.setResolution(160, 90);
+    camera1.setFPS(14);
+    camera1.setPixelFormat(PixelFormat.kYUYV); //formats video specifications for cameras
+
+    //Camera 2
+    camera2 = CameraServer.startAutomaticCapture("cam1", 1);
+    //camera2.setResolution(160, 120);
+    camera2.setFPS(14);
+    camera2.setPixelFormat(PixelFormat.kYUYV); //formats video specifications for cameras
 
     // Configure the button bindings
     configureButtonBindings();
