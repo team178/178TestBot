@@ -7,14 +7,15 @@
 
 package frc.robot;
 
-import edu.wpi.cscore.UsbCamera;
-import edu.wpi.cscore.VideoMode.PixelFormat;
+import edu.wpi.first.cscore.UsbCamera;
+import edu.wpi.first.cscore.VideoMode.PixelFormat;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 //import frc.robot.commands.GyroButton;
 import frc.robot.subsystems.DriveTrain;
+import libs.OI.Joysticks;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -26,7 +27,7 @@ import frc.robot.subsystems.DriveTrain;
 public class Robot extends TimedRobot {
 
   public static DriveTrain driveTrain;
-  public static OI oi;
+  public static Joysticks oi;
   private static double currentAngle;
   //private static final double smallTolerance = .1;
 
@@ -43,7 +44,7 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     driveTrain = new DriveTrain();
-    oi = new OI();
+    oi = new Joysticks();
 
     //Camera initializations
     cameraServer = CameraServer.getInstance();
@@ -55,7 +56,7 @@ public class Robot extends TimedRobot {
     camera1.setPixelFormat(PixelFormat.kYUYV); //formats video specifications for cameras
 
     //Camera 2
-    camera2 = CameraServer.getInstance().startAutomaticCapture("cam1", 1);
+    camera2 = CameraServer.startAutomaticCapture("cam1", 1);
     //camera2.setResolution(160, 120);
     camera2.setFPS(14);
     camera2.setPixelFormat(PixelFormat.kYUYV); //formats video specifications for cameras

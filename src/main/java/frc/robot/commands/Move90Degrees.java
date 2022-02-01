@@ -8,13 +8,13 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
-import frc.robot.OI;
 import frc.robot.Robot;
 import frc.robot.subsystems.DriveTrain;
+import libs.OI.Joysticks;
 
 public class Move90Degrees extends Command {
 
-  private OI oi;
+  private Joysticks oi;
   private DriveTrain driveTrain;
   //private static double currentAngle;
   private static double increment = 90;

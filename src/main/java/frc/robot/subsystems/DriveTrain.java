@@ -7,18 +7,18 @@
 
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.InvertType;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import com.ctre.phoenix.motorcontrol.can.VictorSPX;
-
+import edu.wpi.first.wpilibj.motorcontrol.PWMVictorSPX;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.motorcontrol.MotorController;
+import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
+import edu.wpi.first.wpilibj.motorcontrol.PWMTalonSRX;
 import edu.wpi.first.wpilibj.command.Subsystem;
-import edu.wpi.first.wpilibj.interfaces.Gyro;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
+import edu.wpi.first.wpilibj.Encoder;
 import frc.robot.RobotMap;
-import frc.robot.commands.JoystickDrive;
-import frc.robot.commands.XboxJoystickDrive;
 
 /**
  * Add your docs here.
@@ -26,64 +26,92 @@ import frc.robot.commands.XboxJoystickDrive;
 public class DriveTrain extends Subsystem {
 
   private final SPI.Port sPort = SPI.Port.kOnboardCS0;
-  
-  //DM declarations
-  public static TalonSRX left1;
-  public static VictorSPX left2;
-  public static TalonSRX right1;
-  public static VictorSPX right2;
 
-  private final Gyro gyro = new ADXRS450_Gyro(sPort);
-    
+  private final MotorController m_leftMotor =
+    new MotorControllerGroup(new PWMTalonSRX(RobotMap.DMTopLeft), new PWMVictorSPX(RobotMap.DMBottomLeft));
+  
+  private final MotorController m_rightMotor = 
+    new MotorControllerGroup(new PWMTalonSRX(RobotMap.DMTopRight), new PWMVictorSPX(RobotMap.DMBottomRight));
+  
+  private final DifferentialDrive m_drive = new DifferentialDrive(m_leftMotor, m_rightMotor);
+
+  private final ADXRS450_Gyro m_gyro = new ADXRS450_Gyro(sPort);
+  private final Encoder m_leftEncoder = new Encoder(1, 2); //Will need actual digital input channels later
+  private final Encoder m_rightEncoder = new Encoder(3, 4); //Will need actual digital input channels later
+  
+  /** Create a new drivetrain subsystem. */
   public DriveTrain() {
-	  //Init DMs
-	  left1 = new TalonSRX(RobotMap.DMTopLeft);
-	  left2 = new VictorSPX(RobotMap.DMBottomLeft);
-	  right1 = new TalonSRX(RobotMap.DMTopRight);
-	  right2 = new VictorSPX(RobotMap.DMBottomRight);
-	  
-	  //Set victors to slaves
-	  left2.follow(left1);
-	  right2.follow(right1);
-	  
-	  //Config left motor & sensor directions
-	  left1.setInverted(true);
-	  left1.setSensorPhase(true);
-	  left2.setInverted(InvertType.FollowMaster);
-	  
-	  //Config right motor & sensor directions
-	  right1.setInverted(false);
-	  right1.setSensorPhase(false);
-	  right2.setInverted(InvertType.FollowMaster);
+    super();
+
+    m_leftMotor.setInverted(true);
+
+    m_leftEncoder.setDistancePerPulse((Units.inchesToMeters(6) * Math.PI) / 1024); //1024 is what I guessed for EncoderTicks
+    m_rightEncoder.setDistancePerPulse((Units.inchesToMeters(6) * Math.PI) / 1024); //1024 is what I guessed for EncoderTicks
+
+    addChild("Drive", m_drive);
+    addChild("Gyro", m_gyro);
+    addChild("Left Encoder", m_leftEncoder);
+    addChild("Right Encoder", m_rightEncoder);
   }
   
-  public void drive(double leftPower, double rightPower) {
-    left1.set(ControlMode.PercentOutput, leftPower);
-    right1.set(ControlMode.PercentOutput, rightPower);
+  /**
+   * Tank style driving for the Drivetrain.
+   *
+   * @param left Speed in range [-1,1]
+   * @param right Speed in range [-1,1]
+   */
+  public void drive(double leftSpeed, double rightSpeed) {
+    m_drive.tankDrive(leftSpeed, rightSpeed);
   }
 
+  /** Calibrates the gyro */
   public void calibrate() {
-    gyro.calibrate();
+    m_gyro.calibrate();
   }
 
+  /** Reset the robots sensors to the zero states. */
   public void reset() {
-    gyro.reset();
+    m_gyro.reset();
+    m_leftEncoder.reset();
+    m_rightEncoder.reset();
   }
 
+  /**
+   * Get the robot's heading.
+   *
+   * @return The robots heading in degrees.
+   */
   public double getAngle() {
-    return -gyro.getAngle();
+    return -m_gyro.getAngle();
+  }
+
+    /**
+   * Get the average distance of the encoders since the last reset.
+   *
+   * @return The distance driven (average of left and right encoders).
+   */
+  public double getDistance() {
+    return (m_leftEncoder.getDistance() + m_rightEncoder.getDistance()) / 2;
+  }
+
+  /** The log method puts interesting information to the SmartDashboard. */
+  public void log() {
+    SmartDashboard.putNumber("Left Distance", m_leftEncoder.getDistance());
+    SmartDashboard.putNumber("Right Distance", m_rightEncoder.getDistance());
+    SmartDashboard.putNumber("Left Speed", m_leftEncoder.getRate());
+    SmartDashboard.putNumber("Right Speed", m_rightEncoder.getRate());
+    SmartDashboard.putNumber("Gyro", m_gyro.getAngle());
   }
 
   @Override
   public void periodic() {
-    // setDefaultCommand(new JoystickDrive());
-    setDefaultCommand(new XboxJoystickDrive());
+    log();
   }
 
   @Override
-  public void initDefaultCommand()
-  {
-    // setDefaultCommand(new JoystickDrive());
-    setDefaultCommand(new XboxJoystickDrive());
+  protected void initDefaultCommand() {
+    // TODO Auto-generated method stub
+    
   }
+
 }
