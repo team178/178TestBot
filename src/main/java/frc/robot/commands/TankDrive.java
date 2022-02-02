@@ -5,12 +5,12 @@
 package frc.robot.commands;
 
 import frc.robot.subsystems.DriveTrain;
-import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 
 import java.util.function.DoubleSupplier;
 
 /** Have the robot drive tank style. */
-public class TankDrive extends Command {
+public class TankDrive extends CommandBase {
   private final DriveTrain m_drivetrain;
   private final DoubleSupplier m_left;
   private final DoubleSupplier m_right;
@@ -26,7 +26,7 @@ public class TankDrive extends Command {
     m_drivetrain = drivetrain;
     m_left = left;
     m_right = right;
-    requires(drivetrain);
+    addRequirements(drivetrain);
   }
 
   // Called repeatedly when this Command is scheduled to run
@@ -37,7 +37,7 @@ public class TankDrive extends Command {
 
   // Called once after isFinished returns true
   @Override
-  public void end() {
+  public void end(boolean interrupted) {
     m_drivetrain.drive(0, 0);
   }
 

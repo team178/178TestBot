@@ -6,29 +6,24 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class limelight extends SubsystemBase {
+public class LimeLight extends SubsystemBase {
     
     private NetworkTable table;
     private boolean isConnected = false;
 
-    public limelight() {
+    public LimeLight() {
         table = NetworkTableInstance.getDefault().getTable("limelight");
     }
     
-    public limelight(String name) {
+    public LimeLight(String name) {
         table = NetworkTableInstance.getDefault().getTable(name);
     }
 
-    public limelight(NetworkTable table) {
+    public LimeLight(NetworkTable table) {
         this.table = table;
-    }
-    
-    @Override
-    public void periodic() {
-    // This method will be called once per scheduler run
-    
     }
 
     public boolean isConnected() {
@@ -102,5 +97,16 @@ public class limelight extends SubsystemBase {
         return table.getEntry("pipeline").getDouble(0.0);
     }
 
+    /** The log method puts interesting information to the SmartDashboard. */
+    public void log() {
+        SmartDashboard.putNumber("LimelightX", getHorizontalDegToTarget());
+        SmartDashboard.putNumber("LimelightY", getVerticalDegToTarget());
+        SmartDashboard.putNumber("LimelightArea", getTargetArea());
+    } 
+
+    @Override
+    public void periodic() {
+        log();
+    }
 
 }

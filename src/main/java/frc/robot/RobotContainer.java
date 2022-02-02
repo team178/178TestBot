@@ -14,6 +14,7 @@ import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.Move90Degrees;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.LimeLight;
 import libs.OI.Joysticks;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.commands.TankDrive;
@@ -31,12 +32,12 @@ public class RobotContainer {
   private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
 
   private final DriveTrain m_drivetrain = new DriveTrain();
+  private final LimeLight m_limelight = new LimeLight();
 
   //Creates joystick object for the Main and Aux controllers
   private final Joysticks m_joystick = new Joysticks();
 
   //USB Camera declarations
-  private final CameraServer cameraServer;
   private final UsbCamera camera1;
   private final UsbCamera camera2;
 
@@ -53,11 +54,9 @@ public class RobotContainer {
     m_drivetrain.setDefaultCommand(
         new TankDrive(m_joystick::getLeftStickYAux, m_joystick::getRightStickYAux, m_drivetrain));
 
-    //Camera initializations
-    cameraServer = CameraServer.getInstance();
-    
+
     //Camera 1
-    camera1 = cameraServer.startAutomaticCapture("cam0", 0);
+    camera1 = CameraServer.startAutomaticCapture("cam0", 0);
     //camera1.setResolution(160, 90);
     camera1.setFPS(14);
     camera1.setPixelFormat(PixelFormat.kYUYV); //formats video specifications for cameras
@@ -79,9 +78,7 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    
-    m_joystick.rightPadBottom1
-        .whenPressed(new Move90Degrees(m_drivetrain));
+
 
     // Setup SmartDashboard options
     m_chooser.setDefaultOption("Example Command", m_autoCommand);

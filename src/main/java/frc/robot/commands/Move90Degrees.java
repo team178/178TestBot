@@ -7,11 +7,11 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveTrain;
 
 
-public class Move90Degrees extends Command {
+public class Move90Degrees extends CommandBase {
 
   private DriveTrain m_drivetrain;
 
@@ -22,16 +22,16 @@ public class Move90Degrees extends Command {
 
   public Move90Degrees(DriveTrain drivetrain) {
     m_drivetrain = drivetrain;
-    requires(drivetrain);
+    addRequirements(drivetrain);
   }
 
   // Called just before this Command runs the first time
   @Override
-  protected void initialize() {}
+  public void initialize() {}
 
   // Called repeatedly when this Command is scheduled to run
   @Override
-  protected void execute() {
+  public void execute() {
       if(m_drivetrain.getAngle() > 270 && m_drivetrain.getAngle() < 360) {
         if(increment*4 < m_drivetrain.getAngle()+tolerance && increment > m_drivetrain.getAngle()-tolerance) {
           m_drivetrain.drive(0, 0);
@@ -61,7 +61,7 @@ public class Move90Degrees extends Command {
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
-  protected boolean isFinished() {
+  public boolean isFinished() {
     if( (m_drivetrain.getAngle() > 70 && m_drivetrain.getAngle() < 90)||(m_drivetrain.getAngle() > 160 && m_drivetrain.getAngle() < 180)||
     (m_drivetrain.getAngle() > 250 && m_drivetrain.getAngle() < 270)||(m_drivetrain.getAngle() > 340 && m_drivetrain.getAngle() < 360) ) {
       return true;
@@ -70,15 +70,10 @@ public class Move90Degrees extends Command {
     }
   }
 
-  // Called once after isFinished returns true
-  @Override
-  protected void end() {
-  }
-
-  // Called when another command which requires one or more of the same
-  // subsystems is scheduled to run
-  @Override
-  protected void interrupted() {
-  }
+    // Called once after isFinished returns true
+    @Override
+    public void end(boolean interrupted) {
+      m_drivetrain.drive(0, 0);
+    }
 
 }
