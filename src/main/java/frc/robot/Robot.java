@@ -7,14 +7,15 @@
 
 package frc.robot;
 
-import edu.wpi.cscore.UsbCamera;
-import edu.wpi.cscore.VideoMode.PixelFormat;
-import edu.wpi.first.cameraserver.CameraServer;
+
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.command.Scheduler;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-//import frc.robot.commands.GyroButton;
-import frc.robot.subsystems.DriveTrain;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -25,55 +26,26 @@ import frc.robot.subsystems.DriveTrain;
  */
 public class Robot extends TimedRobot {
 
-  public static DriveTrain driveTrain;
-  public static OI oi;
-  private static double currentAngle;
-  //private static final double smallTolerance = .1;
+  private Command m_autonomousCommand;
+  private RobotContainer m_robotContainer;
 
-  //USB Camera declarations
-  public static CameraServer cameraServer;
-  public static UsbCamera camera1;
-  public static UsbCamera camera2;
-  
-  public static SendableChooser<String> course = new SendableChooser<>();
-  
-  /*
-   * Called regardless of mode
-  */
-  @Override
   public void robotInit() {
-    driveTrain = new DriveTrain();
-    oi = new OI();
-
-    //Camera initializations
-    cameraServer = CameraServer.getInstance();
-    
-    //Camera 1
-    camera1 = cameraServer.startAutomaticCapture("cam0", 0);
-    //camera1.setResolution(160, 90);
-    camera1.setFPS(14);
-    camera1.setPixelFormat(PixelFormat.kYUYV); //formats video specifications for cameras
-
-    //Camera 2
-    camera2 = CameraServer.getInstance().startAutomaticCapture("cam1", 1);
-    //camera2.setResolution(160, 120);
-    camera2.setFPS(14);
-    camera2.setPixelFormat(PixelFormat.kYUYV); //formats video specifications for cameras
-
-    driveTrain.reset();
+    // Instantiate our RobotContainer. This will perform all our button bindings,
+    // and put our
+    // autonomous chooser on the dashboard.
+    m_robotContainer = new RobotContainer();
   }
 
   @Override
   public void robotPeriodic() {
-    System.out.println("Gyro Reading: " + driveTrain.getAngle());
-    
-    if(driveTrain.getAngle()%360 == 0)
-    {
-      currentAngle = driveTrain.getAngle();
-    } else {
-      currentAngle = Math.abs(driveTrain.getAngle()%360);
-    }
-    System.out.println("Current Angle Rading: " + currentAngle);
+    // Runs the Scheduler. This is responsible for polling buttons, adding
+    // newly-scheduled
+    // commands, running already-scheduled commands, removing finished or
+    // interrupted commands,
+    // and running subsystem periodic() methods. This must be called from the
+    // robot's periodic
+    // block in order for anything in the Command-based framework to work.
+    CommandScheduler.getInstance().run();
   }
 
   /*
@@ -94,12 +66,18 @@ public class Robot extends TimedRobot {
   */
   @Override
   public void autonomousInit() {
-    
+    // Get selected routine from the SmartDashboard
+    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+
+    // schedule the autonomous command (example)
+    if (m_autonomousCommand != null) {
+      m_autonomousCommand.schedule();
+    }
   }
 
   @Override
   public void autonomousPeriodic() {
-    Scheduler.getInstance().run();
+    CommandScheduler.getInstance().run();
   }
 
   /*
@@ -107,13 +85,18 @@ public class Robot extends TimedRobot {
   */
   @Override
   public void teleopInit() {
-
+    // This makes sure that the autonomous stops running which will
+    // use the default command which is ArcadeDrive. If you want the autonomous
+    // to continue until interrupted by another command, remove
+    // this line or comment it out.
+    if (m_autonomousCommand != null) {
+      m_autonomousCommand.cancel();
+    }
   }
 
   @Override
   public void teleopPeriodic() {
-    //System.out.println("yeet");
-    Scheduler.getInstance().run();
+    CommandScheduler.getInstance().run();
   }
   
   /*
@@ -121,15 +104,11 @@ public class Robot extends TimedRobot {
   */
   @Override
   public void testInit() {
-    
+    // Cancels all running commands at the start of test mode.
+    CommandScheduler.getInstance().cancelAll();
   }
   
   @Override
   public void testPeriodic() {
-
-  }
-
-  public static double getCurrentAngle() {
-     return Robot.currentAngle;
   }
 }

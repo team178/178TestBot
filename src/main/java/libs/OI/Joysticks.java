@@ -5,16 +5,15 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot;
+package libs.OI;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
-import frc.robot.commands.Calibrate;
-import frc.robot.commands.GyroButton;
-import frc.robot.commands.Move90Degrees;
+import frc.robot.RobotMap;
 
-public class OI {
+
+public class Joysticks {
     //JOYSTICK buttons
 	public static Joystick joystickMain = new Joystick(RobotMap.MAIN);
 	public Button trigger = new JoystickButton(joystickMain, 1);
@@ -45,10 +44,7 @@ public class OI {
 	public Button auxBack = new JoystickButton(xboxAux, 7);
     public Button auxStart = new JoystickButton(xboxAux, 8);
     
-    public OI() {
-		rightPadBottom1.whenPressed(new GyroButton(180));
-		rightPadBottom2.whenPressed(new Calibrate());
-		rightPadBottom3.whenPressed(new Move90Degrees());
+    public Joysticks() {
     }
 
     public double getX() {

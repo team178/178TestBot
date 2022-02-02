@@ -7,82 +7,73 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.command.Command;
-import frc.robot.OI;
-import frc.robot.Robot;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveTrain;
 
-public class Move90Degrees extends Command {
 
-  private OI oi;
-  private DriveTrain driveTrain;
+public class Move90Degrees extends CommandBase {
+
+  private DriveTrain m_drivetrain;
+
   //private static double currentAngle;
   private static double increment = 90;
   private static final double tolerance = 5;
   
 
-  public Move90Degrees() {
-    requires(Robot.driveTrain);
+  public Move90Degrees(DriveTrain drivetrain) {
+    m_drivetrain = drivetrain;
+    addRequirements(drivetrain);
   }
 
   // Called just before this Command runs the first time
   @Override
-  protected void initialize() {
-    oi = Robot.oi;
-    driveTrain = Robot.driveTrain;
-
-  }
+  public void initialize() {}
 
   // Called repeatedly when this Command is scheduled to run
   @Override
-  protected void execute() {
-      if(Robot.getCurrentAngle() > 270 && Robot.getCurrentAngle() < 360) {
-        if(increment*4 < Robot.getCurrentAngle()+tolerance && increment > Robot.getCurrentAngle()-tolerance) {
-            driveTrain.drive(0, 0);
+  public void execute() {
+      if(m_drivetrain.getAngle() > 270 && m_drivetrain.getAngle() < 360) {
+        if(increment*4 < m_drivetrain.getAngle()+tolerance && increment > m_drivetrain.getAngle()-tolerance) {
+          m_drivetrain.drive(0, 0);
         } else {
-            driveTrain.drive(-0.5, 0.5);
+          m_drivetrain.drive(-0.5, 0.5);
         }
-      } else if(Robot.getCurrentAngle() > 180 && Robot.getCurrentAngle() < 270) {
-        if(increment*3 < Robot.getCurrentAngle()+tolerance && increment*3 > Robot.getCurrentAngle()-tolerance) {
-            driveTrain.drive(0, 0);
+      } else if(m_drivetrain.getAngle() > 180 && m_drivetrain.getAngle() < 270) {
+        if(increment*3 < m_drivetrain.getAngle()+tolerance && increment*3 > m_drivetrain.getAngle()-tolerance) {
+          m_drivetrain.drive(0, 0);
         } else {
-            driveTrain.drive(-0.5, 0.5);
+          m_drivetrain.drive(-0.5, 0.5);
         }
-      } else if(Robot.getCurrentAngle() > 90 && Robot.getCurrentAngle() < 180) {
-        if(increment*2 < Robot.getCurrentAngle()+tolerance && increment*2 > Robot.getCurrentAngle()-tolerance) {
-            driveTrain.drive(0, 0);
+      } else if(m_drivetrain.getAngle() > 90 && m_drivetrain.getAngle() < 180) {
+        if(increment*2 < m_drivetrain.getAngle()+tolerance && increment*2 > m_drivetrain.getAngle()-tolerance) {
+          m_drivetrain.drive(0, 0);
         } else {
-            driveTrain.drive(-0.5, 0.5);
+          m_drivetrain.drive(-0.5, 0.5);
         }
-      } else if(Robot.getCurrentAngle() > 0 && Robot.getCurrentAngle() < 90) {
-        if(increment < Robot.getCurrentAngle()+tolerance && increment > Robot.getCurrentAngle()-tolerance) {
-            driveTrain.drive(0, 0);
+      } else if(m_drivetrain.getAngle() > 0 && m_drivetrain.getAngle() < 90) {
+        if(increment < m_drivetrain.getAngle()+tolerance && increment > m_drivetrain.getAngle()-tolerance) {
+          m_drivetrain.drive(0, 0);
         } else {
-            driveTrain.drive(-0.5, 0.5);
+          m_drivetrain.drive(-0.5, 0.5);
         }
       }
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
-  protected boolean isFinished() {
-    if( (Robot.getCurrentAngle() > 70 && Robot.getCurrentAngle() < 90)||(Robot.getCurrentAngle() > 160 && Robot.getCurrentAngle() < 180)||
-    (Robot.getCurrentAngle() > 250 && Robot.getCurrentAngle() < 270)||(Robot.getCurrentAngle() > 340 && Robot.getCurrentAngle() < 360) ) {
+  public boolean isFinished() {
+    if( (m_drivetrain.getAngle() > 70 && m_drivetrain.getAngle() < 90)||(m_drivetrain.getAngle() > 160 && m_drivetrain.getAngle() < 180)||
+    (m_drivetrain.getAngle() > 250 && m_drivetrain.getAngle() < 270)||(m_drivetrain.getAngle() > 340 && m_drivetrain.getAngle() < 360) ) {
       return true;
     } else {
       return false;
     }
   }
 
-  // Called once after isFinished returns true
-  @Override
-  protected void end() {
-  }
-
-  // Called when another command which requires one or more of the same
-  // subsystems is scheduled to run
-  @Override
-  protected void interrupted() {
-  }
+    // Called once after isFinished returns true
+    @Override
+    public void end(boolean interrupted) {
+      m_drivetrain.drive(0, 0);
+    }
 
 }
