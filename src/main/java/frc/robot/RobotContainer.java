@@ -4,12 +4,13 @@
 
 package frc.robot;
 
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.UsbCamera;
+import edu.wpi.first.cscore.VideoMode.PixelFormat;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import frc.robot.commands.Calibrate;
 import frc.robot.commands.ExampleCommand;
-import frc.robot.commands.GyroButton;
 import frc.robot.commands.Move90Degrees;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.ExampleSubsystem;
@@ -80,11 +81,7 @@ public class RobotContainer {
   private void configureButtonBindings() {
     
     m_joystick.rightPadBottom1
-        .whenPressed(new GyroButton(180));
-    m_joystick.rightPadBottom2
-        .whenPressed(new Calibrate());
-    m_joystick.rightPadBottom3
-        .whenPressed(new Move90Degrees());
+        .whenPressed(new Move90Degrees(m_drivetrain));
 
     // Setup SmartDashboard options
     m_chooser.setDefaultOption("Example Command", m_autoCommand);

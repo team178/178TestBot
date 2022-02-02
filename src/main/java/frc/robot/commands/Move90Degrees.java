@@ -22,7 +22,7 @@ public class Move90Degrees extends Command {
 
   public Move90Degrees(DriveTrain drivetrain) {
     m_drivetrain = drivetrain;
-    requires(driveTrain);
+    requires(drivetrain);
   }
 
   // Called just before this Command runs the first time
@@ -38,7 +38,7 @@ public class Move90Degrees extends Command {
         } else {
           m_drivetrain.drive(-0.5, 0.5);
         }
-      } else if(Robot.getCurrentAngle() > 180 && Robot.getCurrentAngle() < 270) {
+      } else if(m_drivetrain.getAngle() > 180 && m_drivetrain.getAngle() < 270) {
         if(increment*3 < m_drivetrain.getAngle()+tolerance && increment*3 > m_drivetrain.getAngle()-tolerance) {
           m_drivetrain.drive(0, 0);
         } else {
