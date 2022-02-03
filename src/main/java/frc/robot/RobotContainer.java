@@ -7,16 +7,19 @@ package frc.robot;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.cscore.VideoMode.PixelFormat;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import frc.robot.commands.ExampleCommand;
 import frc.robot.subsystems.DriveTrain;
-import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.LimeLight;
+import libs.IO.ConsoleController;
 import libs.IO.Joysticks;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.PIDCommand;
+import frc.robot.Constants.DriveConstants;
 import frc.robot.commands.TankDrive;
+import frc.robot.commands.TurnToAngle;
 import frc.robot.commands.aimingTest;
 
 
@@ -32,7 +35,7 @@ public class RobotContainer {
   private final LimeLight m_limelight = new LimeLight();
 
   //Creates joystick object for the Main and Aux controllers
-  private final Joysticks m_joystick = new Joysticks();
+  private final ConsoleController m_joystick = new ConsoleController(0);
 
   //USB Camera declarations
   private final UsbCamera camera1;
@@ -49,7 +52,7 @@ public class RobotContainer {
      //m_drivetrain.setDefaultCommand(
         //new TankDrive(m_joystick.getLeftY(), m_joystick.getRightY(), m_drivetrain));
     m_drivetrain.setDefaultCommand(
-        new TankDrive(m_joystick::getLeftStickYAux, m_joystick::getRightStickYAux, m_drivetrain));
+        new TankDrive(m_joystick::getLeftStickY, m_joystick::getRightStickY, m_drivetrain));
 
 
     //Camera 1
@@ -76,6 +79,26 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
 
+    m_joystick.leftBumper
+    .whenHeld(
+      new PIDCommand(
+          new PIDController(
+              DriveConstants.kStabilizationP,
+              DriveConstants.kStabilizationI,
+              DriveConstants.kStabilizationD),
+          // Close the loop on the turn rate
+          m_drivetrain::getTurnRate,
+          // Setpoint is 0
+          0,
+          // Pipe the output to the turning controls
+          output -> m_drivetrain.arcadeDrive(-m_joystick.getLeftStickY(), output),
+          // Require the robot drive
+          m_drivetrain));
+
+    m_joystick.a
+      .whenPressed(new TurnToAngle(90, m_drivetrain).withTimeout(5));
+    m_joystick.x
+      .whenPressed(new TurnToAngle(-90, m_drivetrain).withTimeout(5));
 
     // Setup SmartDashboard options
     m_chooser.setDefaultOption("Aiming Using Vision", new aimingTest(m_drivetrain, m_limelight));

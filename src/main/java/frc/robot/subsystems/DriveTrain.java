@@ -15,10 +15,9 @@ import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj.motorcontrol.PWMTalonSRX;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.SPI;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.Encoder;
-import frc.robot.RobotMap;
+import frc.robot.Constants.DriveConstants;
 
 /**
  * Add your docs here.
@@ -28,25 +27,39 @@ public class DriveTrain extends SubsystemBase {
   private final SPI.Port sPort = SPI.Port.kOnboardCS0;
 
   private final MotorController m_leftMotor =
-    new MotorControllerGroup(new PWMTalonSRX(RobotMap.DMTopLeft), new PWMVictorSPX(RobotMap.DMBottomLeft));
+    new MotorControllerGroup(new PWMTalonSRX(DriveConstants.kLeftMotor1Port), new PWMVictorSPX(DriveConstants.kLeftMotor2Port));
   
   private final MotorController m_rightMotor = 
-    new MotorControllerGroup(new PWMTalonSRX(RobotMap.DMTopRight), new PWMVictorSPX(RobotMap.DMBottomRight));
+    new MotorControllerGroup(new PWMTalonSRX(DriveConstants.kRightMotor1Port), new PWMVictorSPX(DriveConstants.kRightMotor2Port));
   
   private final DifferentialDrive m_drive = new DifferentialDrive(m_leftMotor, m_rightMotor);
 
   private final ADXRS450_Gyro m_gyro = new ADXRS450_Gyro(sPort);
-  private final Encoder m_leftEncoder = new Encoder(1, 2); //Will need actual digital input channels later
-  private final Encoder m_rightEncoder = new Encoder(3, 4); //Will need actual digital input channels later
+
+  // The left-side drive encoder
+  private final Encoder m_leftEncoder =
+      new Encoder(
+          DriveConstants.kLeftEncoderPorts[0],
+          DriveConstants.kLeftEncoderPorts[1],
+          DriveConstants.kLeftEncoderReversed);
+
+  // The right-side drive encoder
+  private final Encoder m_rightEncoder =
+      new Encoder(
+          DriveConstants.kRightEncoderPorts[0],
+          DriveConstants.kRightEncoderPorts[1],
+          DriveConstants.kRightEncoderReversed);
   
   /** Create a new drivetrain subsystem. */
   public DriveTrain() {
-    super();
+    // We need to invert one side of the drivetrain so that positive voltages
+    // result in both sides moving forward. Depending on how your robot's
+    // gearbox is constructed, you might have to invert the left side instead.
+    m_rightMotor.setInverted(true);
 
-    m_leftMotor.setInverted(true);
-
-    m_leftEncoder.setDistancePerPulse((Units.inchesToMeters(6) * Math.PI) / 1024); //1024 is what I guessed for EncoderTicks
-    m_rightEncoder.setDistancePerPulse((Units.inchesToMeters(6) * Math.PI) / 1024); //1024 is what I guessed for EncoderTicks
+    // Sets the distance per pulse for the encoders
+    m_leftEncoder.setDistancePerPulse(DriveConstants.kEncoderDistancePerPulse);
+    m_rightEncoder.setDistancePerPulse(DriveConstants.kEncoderDistancePerPulse);
 
     addChild("Drive", m_drive);
     addChild("Gyro", m_gyro);
@@ -64,6 +77,16 @@ public class DriveTrain extends SubsystemBase {
     m_drive.tankDrive(leftSpeed, rightSpeed);
   }
 
+  /**
+   * Drives the robot using arcade controls.
+   *
+   * @param fwd the commanded forward movement
+   * @param rot the commanded rotation
+   */
+  public void arcadeDrive(double fwd, double rot) {
+    m_drive.arcadeDrive(fwd, rot);
+  }
+
   /** Calibrates the gyro */
   public void calibrate() {
     m_gyro.calibrate();
@@ -79,10 +102,28 @@ public class DriveTrain extends SubsystemBase {
   /**
    * Get the robot's heading.
    *
-   * @return The robots heading in degrees.
+   * @return the robot's heading in degrees, from 180 to 180
    */
   public double getAngle() {
-    return -m_gyro.getAngle();
+    return Math.IEEEremainder(m_gyro.getAngle(), 360) * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
+  }
+
+  /**
+   * Gets the left drive encoder.
+   *
+   * @return the left drive encoder
+   */
+  public Encoder getLeftEncoder() {
+    return m_leftEncoder;
+  }
+
+  /**
+   * Gets the right drive encoder.
+   *
+   * @return the right drive encoder
+   */
+  public Encoder getRightEncoder() {
+    return m_rightEncoder;
   }
 
     /**
@@ -92,6 +133,15 @@ public class DriveTrain extends SubsystemBase {
    */
   public double getDistance() {
     return (m_leftEncoder.getDistance() + m_rightEncoder.getDistance()) / 2;
+  }
+
+  /**
+   * Returns the turn rate of the robot.
+   *
+   * @return The turn rate of the robot, in degrees per second
+   */
+  public double getTurnRate() {
+    return m_gyro.getRate() * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
   }
 
   /** The log method puts interesting information to the SmartDashboard. */

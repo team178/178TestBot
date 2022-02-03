@@ -10,12 +10,12 @@ package libs.IO;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
-import frc.robot.RobotMap;
+import frc.robot.Constants.OIConstants;
 
 
 public class Joysticks {
     //JOYSTICK buttons
-	public static Joystick joystickMain = new Joystick(RobotMap.MAIN);
+	public static Joystick joystickMain = new Joystick(OIConstants.kJoystickPort);
 	public Button trigger = new JoystickButton(joystickMain, 1);
 	public Button headBottom = new JoystickButton(joystickMain, 2);
 	public Button headLeft = new JoystickButton(joystickMain, 3);
@@ -34,7 +34,7 @@ public class Joysticks {
 	public Button rightPadBottom3 = new JoystickButton(joystickMain, 16);
 
 	//AUX controller buttons
-	public static Joystick xboxAux = new Joystick(RobotMap.AUX); //Controller
+	public static Joystick xboxAux = new Joystick(OIConstants.kControllerPort); //Controller
 	public Button auxA = new JoystickButton(xboxAux, 1);
 	public Button auxB = new JoystickButton(xboxAux, 2);
 	public Button auxX = new JoystickButton(xboxAux, 3);
