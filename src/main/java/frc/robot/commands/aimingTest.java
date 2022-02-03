@@ -5,22 +5,36 @@
 package frc.robot.commands;
 
 import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.LimeLight;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /** An example command that uses an example subsystem. */
 public class aimingTest extends CommandBase {
-  @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
+
   private final DriveTrain m_drivetrain;
+  private final LimeLight m_limelight;
+  
+  private double Kp = -0.1;
+  private double min_command = 0.05;
+  private double tolerance = 0.1;
+  
+  private double tx;
+  private double steering_adjust; 
+  private double heading_error;
+
+  private double m_left;
+  private double m_right; 
 
   /**
    * Creates a new ExampleCommand.
    *
    * @param subsystem The subsystem used by this command.
    */
-  public aimingTest(DriveTrain drivetrain) {
+  public aimingTest(DriveTrain drivetrain, LimeLight limelight) {
     m_drivetrain = drivetrain;
-    // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(drivetrain);
+    m_limelight = limelight;
+    
+    addRequirements(drivetrain, limelight);
   }
 
   // Called when the command is initially scheduled.
@@ -29,15 +43,32 @@ public class aimingTest extends CommandBase {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    tx = m_limelight.getHorizontalDegToTarget();
+    heading_error = -tx;
+    
+    if (tx > 1.0){
+          steering_adjust = Kp*heading_error - min_command;
+    }
+    else if (tx < 1.0){
+      steering_adjust = Kp*heading_error + min_command;
+    }
+      
+    m_left += steering_adjust;
+    m_right -= steering_adjust;
+
+    m_drivetrain.drive(m_left, m_right);
+  }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    m_drivetrain.drive(0, 0);
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return Math.abs(heading_error) <= tolerance;
   }
 }
