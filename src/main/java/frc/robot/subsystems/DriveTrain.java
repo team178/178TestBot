@@ -14,11 +14,13 @@ import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.SPI;
 
+import java.util.function.DoubleSupplier;
+
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
-import edu.wpi.first.wpilibj.Encoder;
 import frc.robot.Constants.DriveConstants;
 
 
@@ -29,29 +31,27 @@ public class DriveTrain extends SubsystemBase {
 
   private final SPI.Port sPort = SPI.Port.kOnboardCS0;
 
+  private final WPI_TalonSRX leftMaster = new WPI_TalonSRX(DriveConstants.kLeftMotor1Port);
+  private final WPI_VictorSPX leftSlave = new WPI_VictorSPX(DriveConstants.kLeftMotor2Port);
+
+  private final WPI_TalonSRX rightMaster = new WPI_TalonSRX(DriveConstants.kRightMotor1Port);
+  private final WPI_VictorSPX rightSlave = new WPI_VictorSPX(DriveConstants.kRightMotor2Port);
+
+  //Encoder methods
+  public DoubleSupplier leftPosition;
+  public DoubleSupplier rightPosition;
+  public DoubleSupplier leftRate;
+  public DoubleSupplier rightRate;
+
   private final MotorController m_leftMotor =
-    new MotorControllerGroup(new WPI_TalonSRX(DriveConstants.kLeftMotor1Port), new WPI_VictorSPX(DriveConstants.kLeftMotor2Port));
+    new MotorControllerGroup(leftMaster, leftSlave);
   
   private final MotorController m_rightMotor = 
-    new MotorControllerGroup(new WPI_TalonSRX(DriveConstants.kRightMotor1Port), new WPI_VictorSPX(DriveConstants.kRightMotor2Port));
+    new MotorControllerGroup(rightMaster, rightSlave);
   
   private final DifferentialDrive m_drive = new DifferentialDrive(m_leftMotor, m_rightMotor);
 
   private final ADXRS450_Gyro m_gyro = new ADXRS450_Gyro(sPort);
-
-  // The left-side drive encoder
-  private final Encoder m_leftEncoder =
-      new Encoder(
-          DriveConstants.kLeftEncoderPorts[0],
-          DriveConstants.kLeftEncoderPorts[1],
-          DriveConstants.kLeftEncoderReversed);
-
-  // The right-side drive encoder
-  private final Encoder m_rightEncoder =
-      new Encoder(
-          DriveConstants.kRightEncoderPorts[0],
-          DriveConstants.kRightEncoderPorts[1],
-          DriveConstants.kRightEncoderReversed);
   
   /** Create a new drivetrain subsystem. */
   public DriveTrain() {
@@ -61,13 +61,19 @@ public class DriveTrain extends SubsystemBase {
     m_rightMotor.setInverted(true);
 
     // Sets the distance per pulse for the encoders
-    m_leftEncoder.setDistancePerPulse(DriveConstants.kEncoderDistancePerPulse);
-    m_rightEncoder.setDistancePerPulse(DriveConstants.kEncoderDistancePerPulse);
+    leftMaster.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute, 0, 10);
+    rightMaster.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute, 0, 10);
+    
+    leftMaster.setSensorPhase(true);
+    rightMaster.setSensorPhase(false);
+    
+    leftPosition = () -> leftMaster.getSelectedSensorPosition(0) * DriveConstants.kEncoderDistancePerPulse; //r
+    leftRate = () -> leftMaster.getSelectedSensorVelocity(0) * DriveConstants.kEncoderDistancePerPulse * 10; //r
+    rightPosition = () -> rightMaster.getSelectedSensorPosition(0) * DriveConstants.kEncoderDistancePerPulse; //l
+    rightRate = () -> rightMaster.getSelectedSensorVelocity(0) * DriveConstants.kEncoderDistancePerPulse * 10; //l
 
     addChild("Drive", m_drive);
     addChild("Gyro", m_gyro);
-    addChild("Left Encoder", m_leftEncoder);
-    addChild("Right Encoder", m_rightEncoder);
   }
   
   /**
@@ -98,8 +104,8 @@ public class DriveTrain extends SubsystemBase {
   /** Reset the robots sensors to the zero states. */
   public void reset() {
     m_gyro.reset();
-    m_leftEncoder.reset();
-    m_rightEncoder.reset();
+    leftMaster.setSelectedSensorPosition(0);
+    rightMaster.setSelectedSensorPosition(0);
   }
 
   /**
@@ -116,8 +122,8 @@ public class DriveTrain extends SubsystemBase {
    *
    * @return the left drive encoder
    */
-  public Encoder getLeftEncoder() {
-    return m_leftEncoder;
+  public double getLeftEncoder() {
+    return leftMaster.getSelectedSensorPosition(0);
   }
 
   /**
@@ -125,8 +131,8 @@ public class DriveTrain extends SubsystemBase {
    *
    * @return the right drive encoder
    */
-  public Encoder getRightEncoder() {
-    return m_rightEncoder;
+  public double getRightEncoder() {
+    return rightMaster.getSelectedSensorPosition(0);
   }
 
     /**
@@ -135,7 +141,7 @@ public class DriveTrain extends SubsystemBase {
    * @return The distance driven (average of left and right encoders).
    */
   public double getDistance() {
-    return (m_leftEncoder.getDistance() + m_rightEncoder.getDistance()) / 2;
+    return (leftPosition.getAsDouble() + rightPosition.getAsDouble()) / 2;
   }
 
   /**
@@ -149,10 +155,10 @@ public class DriveTrain extends SubsystemBase {
 
   /** The log method puts interesting information to the SmartDashboard. */
   public void log() {
-    SmartDashboard.putNumber("Left Distance", m_leftEncoder.getDistance());
-    SmartDashboard.putNumber("Right Distance", m_rightEncoder.getDistance());
-    SmartDashboard.putNumber("Left Speed", m_leftEncoder.getRate());
-    SmartDashboard.putNumber("Right Speed", m_rightEncoder.getRate());
+    SmartDashboard.putNumber("Left Distance", leftPosition.getAsDouble());
+    SmartDashboard.putNumber("Right Distance", rightPosition.getAsDouble());
+    SmartDashboard.putNumber("Left Speed", leftRate.getAsDouble());
+    SmartDashboard.putNumber("Right Speed", rightRate.getAsDouble());
     SmartDashboard.putNumber("Gyro", m_gyro.getAngle());
   }
 
