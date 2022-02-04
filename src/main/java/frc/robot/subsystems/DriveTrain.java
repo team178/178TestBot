@@ -7,17 +7,20 @@
 
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj.motorcontrol.PWMVictorSPX;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.motorcontrol.MotorController;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
-import edu.wpi.first.wpilibj.motorcontrol.PWMTalonSRX;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.SPI;
+
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
+
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.Encoder;
 import frc.robot.Constants.DriveConstants;
+
 
 /**
  * Add your docs here.
@@ -27,10 +30,10 @@ public class DriveTrain extends SubsystemBase {
   private final SPI.Port sPort = SPI.Port.kOnboardCS0;
 
   private final MotorController m_leftMotor =
-    new MotorControllerGroup(new PWMTalonSRX(DriveConstants.kLeftMotor1Port), new PWMVictorSPX(DriveConstants.kLeftMotor2Port));
+    new MotorControllerGroup(new WPI_TalonSRX(DriveConstants.kLeftMotor1Port), new WPI_VictorSPX(DriveConstants.kLeftMotor2Port));
   
   private final MotorController m_rightMotor = 
-    new MotorControllerGroup(new PWMTalonSRX(DriveConstants.kRightMotor1Port), new PWMVictorSPX(DriveConstants.kRightMotor2Port));
+    new MotorControllerGroup(new WPI_TalonSRX(DriveConstants.kRightMotor1Port), new WPI_VictorSPX(DriveConstants.kRightMotor2Port));
   
   private final DifferentialDrive m_drive = new DifferentialDrive(m_leftMotor, m_rightMotor);
 
