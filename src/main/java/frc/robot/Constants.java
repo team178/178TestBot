@@ -26,12 +26,6 @@ public final class Constants {
         // Assumes the encoders are directly mounted on the wheel shafts
         (kWheelDiameterInches * Math.PI) / (double) kEncoderCPR;
 
-    public static final boolean kGyroReversed = false;
-
-    public static final double kStabilizationP = 1;
-    public static final double kStabilizationI = 0.5;
-    public static final double kStabilizationD = 0;
-
     public static final double kTurnP = 1;
     public static final double kTurnI = 0;
     public static final double kTurnD = 0;
@@ -46,5 +40,7 @@ public final class Constants {
   public static final class OIConstants {
     public static final int kJoystickPort = 0;
     public static final int kControllerPort = 1;
+
+    public static double kThrustSpeedMult = 1.5;
   }
 }

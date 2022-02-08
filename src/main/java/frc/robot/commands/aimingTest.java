@@ -57,13 +57,13 @@ public class aimingTest extends CommandBase {
     m_left += steering_adjust;
     m_right -= steering_adjust;
 
-    m_drivetrain.drive(m_left, m_right);
+    m_drivetrain.tankDrive(m_left, m_right);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_drivetrain.drive(0, 0);
+    m_drivetrain.tankDrive(0, 0);
   }
 
   // Returns true when the command should end.
