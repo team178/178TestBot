@@ -78,27 +78,6 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
 
-    m_joystick.leftBumper
-    .whenHeld(
-      new PIDCommand(
-          new PIDController(
-              DriveConstants.kStabilizationP,
-              DriveConstants.kStabilizationI,
-              DriveConstants.kStabilizationD),
-          // Close the loop on the turn rate
-          m_drivetrain::getTurnRate,
-          // Setpoint is 0
-          0,
-          // Pipe the output to the turning controls
-          output -> m_drivetrain.arcadeDrive(-m_joystick.getLeftStickY(), output),
-          // Require the robot drive
-          m_drivetrain));
-
-    m_joystick.a
-      .whenPressed(new TurnToAngle(90, m_drivetrain).withTimeout(5));
-    m_joystick.x
-      .whenPressed(new TurnToAngle(-90, m_drivetrain).withTimeout(5));
-
     // Setup SmartDashboard options
     m_chooser.setDefaultOption("Aiming Using Vision", new aimingTest(m_drivetrain, m_limelight));
   }

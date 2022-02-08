@@ -29,8 +29,6 @@ import frc.robot.Constants.DriveConstants;
  */
 public class DriveTrain extends SubsystemBase {
 
-  private final SPI.Port sPort = SPI.Port.kOnboardCS0;
-
   private final WPI_TalonSRX leftMaster = new WPI_TalonSRX(DriveConstants.kLeftMotor1Port);
   private final WPI_VictorSPX leftSlave = new WPI_VictorSPX(DriveConstants.kLeftMotor2Port);
 
@@ -50,8 +48,6 @@ public class DriveTrain extends SubsystemBase {
     new MotorControllerGroup(rightMaster, rightSlave);
   
   private final DifferentialDrive m_drive = new DifferentialDrive(m_leftMotor, m_rightMotor);
-
-  private final ADXRS450_Gyro m_gyro = new ADXRS450_Gyro(sPort);
   
   /** Create a new drivetrain subsystem. */
   public DriveTrain() {
@@ -74,7 +70,6 @@ public class DriveTrain extends SubsystemBase {
     rightRate = () -> rightMaster.getSelectedSensorVelocity(0) * DriveConstants.kEncoderDistancePerPulse * 10; //l
 
     addChild("Drive", m_drive);
-    addChild("Gyro", m_gyro);
   }
   
   /**
@@ -97,25 +92,10 @@ public class DriveTrain extends SubsystemBase {
     m_drive.arcadeDrive(fwd, rot);
   }
 
-  /** Calibrates the gyro */
-  public void calibrate() {
-    m_gyro.calibrate();
-  }
-
   /** Reset the robots sensors to the zero states. */
   public void reset() {
-    m_gyro.reset();
     leftMaster.setSelectedSensorPosition(0);
     rightMaster.setSelectedSensorPosition(0);
-  }
-
-  /**
-   * Get the robot's heading.
-   *
-   * @return the robot's heading in degrees, from 180 to 180
-   */
-  public double getAngle() {
-    return Math.IEEEremainder(m_gyro.getAngle(), 360) * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
   }
 
   /**
@@ -145,22 +125,12 @@ public class DriveTrain extends SubsystemBase {
     return (leftPosition.getAsDouble() + rightPosition.getAsDouble()) / 2;
   }
 
-  /**
-   * Returns the turn rate of the robot.
-   *
-   * @return The turn rate of the robot, in degrees per second
-   */
-  public double getTurnRate() {
-    return m_gyro.getRate() * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
-  }
-
   /** The log method puts interesting information to the SmartDashboard. */
   public void log() {
     SmartDashboard.putNumber("Left Distance", leftPosition.getAsDouble());
     SmartDashboard.putNumber("Right Distance", rightPosition.getAsDouble());
     SmartDashboard.putNumber("Left Speed", leftRate.getAsDouble());
     SmartDashboard.putNumber("Right Speed", rightRate.getAsDouble());
-    SmartDashboard.putNumber("Gyro", m_gyro.getAngle());
   }
 
   @Override
