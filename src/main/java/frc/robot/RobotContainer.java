@@ -11,10 +11,12 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.LimeLight;
 import libs.IO.ConsoleController;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.commands.ArcadeDrive;
 import frc.robot.commands.TankDrive;
 import frc.robot.commands.aimingTest;
 
@@ -27,7 +29,7 @@ import frc.robot.commands.aimingTest;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final DriveTrain m_drivetrain = new DriveTrain();
+  public final DriveTrain m_drivetrain = new DriveTrain();
   private final LimeLight m_limelight = new LimeLight();
 
   //Creates joystick object for the Main and Aux controllers
@@ -37,8 +39,9 @@ public class RobotContainer {
   private final UsbCamera camera1;
   private final UsbCamera camera2;
 
-  // Create SmartDashboard chooser for autonomous routines
-  private final SendableChooser<Command> m_chooser = new SendableChooser<>();
+  // Create SmartDashboard chooser for autonomous routines and drive
+  private final SendableChooser<Command> m_autoChooser = new SendableChooser<>();
+  private final SendableChooser<Command> m_driveChooser = new SendableChooser<>();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -47,8 +50,8 @@ public class RobotContainer {
     
      //m_drivetrain.setDefaultCommand(
         //new TankDrive(m_joystick.getLeftY(), m_joystick.getRightY(), m_drivetrain));
-    m_drivetrain.setDefaultCommand(
-        new TankDrive(m_joystick::getLeftStickY, m_joystick::getRightStickY, m_drivetrain));
+    //m_drivetrain.setDefaultCommand(
+        //new TankDrive(m_joystick::getLeftStickY, m_joystick::getRightStickY, m_drivetrain));
 
     if(RobotBase.isReal()){
       //Camera 1
@@ -81,7 +84,14 @@ public class RobotContainer {
   private void configureButtonBindings() {
 
     // Setup SmartDashboard options
-    m_chooser.setDefaultOption("Aiming Using Vision", new aimingTest(m_drivetrain, m_limelight));
+    m_autoChooser.setDefaultOption("Aiming Using Vision", new aimingTest(m_drivetrain, m_limelight));
+
+    m_driveChooser.setDefaultOption("Tank Drive", new TankDrive(m_joystick::getLeftStickY, m_joystick::getRightStickY, m_drivetrain));
+    m_driveChooser.addOption("Arcade Drive", new ArcadeDrive(m_joystick::getLeftStickY, m_joystick::getRightStickX, m_drivetrain));
+  
+    // Put SmartDashboard Options onto SmartDashboard
+    SmartDashboard.putData("Autonomous Routine", m_autoChooser);
+    SmartDashboard.putData("Drive Routine", m_driveChooser);
   }
 
   /**
@@ -91,6 +101,10 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    return m_chooser.getSelected();
+    return m_autoChooser.getSelected();
+  }
+
+  public Command getDriveCommand(){
+    return m_driveChooser.getSelected();
   }
 }

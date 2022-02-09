@@ -21,6 +21,11 @@
           "open": true
         }
       }
+    },
+    "RoboRIO": {
+      "window": {
+        "visible": true
+      }
     }
   },
   "NTProvider": {
@@ -29,7 +34,9 @@
       "/LiveWindow/DriveTrain": "Subsystem",
       "/LiveWindow/DriveTrain/Drive": "DifferentialDrive",
       "/LiveWindow/LimeLight": "Subsystem",
-      "/LiveWindow/Ungrouped/Scheduler": "Scheduler"
+      "/LiveWindow/Ungrouped/Scheduler": "Scheduler",
+      "/SmartDashboard/Autnomous Routine": "String Chooser",
+      "/SmartDashboard/Drive Routine": "String Chooser"
     },
     "windows": {
       "/LiveWindow/DriveTrain/Drive": {
@@ -38,6 +45,21 @@
         }
       },
       "/LiveWindow/LimeLight": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/LiveWindow/Ungrouped/Scheduler": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/Autnomous Routine": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/Drive Routine": {
         "window": {
           "visible": true
         }
@@ -57,8 +79,7 @@
       },
       "Ungrouped": {
         "open": true
-      },
-      "open": true
+      }
     },
     "SmartDashboard": {
       "open": true
