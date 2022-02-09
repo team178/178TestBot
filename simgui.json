@@ -1,0 +1,67 @@
+{
+  "HALProvider": {
+    "Other Devices": {
+      "Talon SRX[1]": {
+        "header": {
+          "open": true
+        }
+      },
+      "Talon SRX[1]/Quad Encoder": {
+        "header": {
+          "open": true
+        }
+      },
+      "Talon SRX[3]": {
+        "header": {
+          "open": true
+        }
+      },
+      "Talon SRX[3]/Quad Encoder": {
+        "header": {
+          "open": true
+        }
+      }
+    }
+  },
+  "NTProvider": {
+    "types": {
+      "/FMSInfo": "FMSInfo",
+      "/LiveWindow/DriveTrain": "Subsystem",
+      "/LiveWindow/DriveTrain/Drive": "DifferentialDrive",
+      "/LiveWindow/LimeLight": "Subsystem",
+      "/LiveWindow/Ungrouped/Scheduler": "Scheduler"
+    },
+    "windows": {
+      "/LiveWindow/DriveTrain/Drive": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/LiveWindow/LimeLight": {
+        "window": {
+          "visible": true
+        }
+      }
+    }
+  },
+  "NetworkTables": {
+    "LiveWindow": {
+      "DriveTrain": {
+        "Drive": {
+          "open": true
+        },
+        "open": true
+      },
+      "LimeLight": {
+        "open": true
+      },
+      "Ungrouped": {
+        "open": true
+      },
+      "open": true
+    },
+    "SmartDashboard": {
+      "open": true
+    }
+  }
+}

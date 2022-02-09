@@ -8,6 +8,7 @@ import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.cscore.VideoMode.PixelFormat;
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.subsystems.DriveTrain;
@@ -49,18 +50,23 @@ public class RobotContainer {
     m_drivetrain.setDefaultCommand(
         new TankDrive(m_joystick::getLeftStickY, m_joystick::getRightStickY, m_drivetrain));
 
+    if(RobotBase.isReal()){
+      //Camera 1
+      camera1 = CameraServer.startAutomaticCapture("cam0", 0);
+      //camera1.setResolution(160, 90);
+      camera1.setFPS(14);
+      camera1.setPixelFormat(PixelFormat.kYUYV); //formats video specifications for cameras
 
-    //Camera 1
-    camera1 = CameraServer.startAutomaticCapture("cam0", 0);
-    //camera1.setResolution(160, 90);
-    camera1.setFPS(14);
-    camera1.setPixelFormat(PixelFormat.kYUYV); //formats video specifications for cameras
-
-    //Camera 2
-    camera2 = CameraServer.startAutomaticCapture("cam1", 1);
-    //camera2.setResolution(160, 120);
-    camera2.setFPS(14);
-    camera2.setPixelFormat(PixelFormat.kYUYV); //formats video specifications for cameras
+      //Camera 2
+      camera2 = CameraServer.startAutomaticCapture("cam1", 1);
+      //camera2.setResolution(160, 120);
+      camera2.setFPS(14);
+      camera2.setPixelFormat(PixelFormat.kYUYV); //formats video specifications for cameras
+    }
+    else{
+      camera1 = null;
+      camera2 = null;
+    }
 
     // Configure the button bindings
     configureButtonBindings();
