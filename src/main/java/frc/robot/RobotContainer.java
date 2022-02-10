@@ -8,6 +8,7 @@ import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.cscore.VideoMode.PixelFormat;
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -33,7 +34,8 @@ public class RobotContainer {
   private final LimeLight m_limelight = new LimeLight();
 
   //Creates joystick object for the Main and Aux controllers
-  private final ConsoleController m_joystick = new ConsoleController(0);
+  private final ConsoleController m_controller = new ConsoleController(0);
+  private final Joystick m_jJoystick = new Joystick(0);
 
   //USB Camera declarations
   private final UsbCamera camera1;
@@ -86,8 +88,11 @@ public class RobotContainer {
     // Setup SmartDashboard options
     m_autoChooser.setDefaultOption("Aiming Using Vision", new aimingTest(m_drivetrain, m_limelight));
 
-    m_driveChooser.setDefaultOption("Tank Drive", new TankDrive(m_joystick::getLeftStickY, m_joystick::getRightStickY, m_drivetrain));
-    m_driveChooser.addOption("Arcade Drive", new ArcadeDrive(m_joystick::getLeftStickY, m_joystick::getRightStickX, m_drivetrain));
+    m_driveChooser.setDefaultOption("Controller Tank Drive", new TankDrive(m_controller::getLeftStickY, m_controller::getRightStickY, m_drivetrain));
+    m_driveChooser.addOption("Controller Arcade Drive", new ArcadeDrive(m_controller::getLeftStickY, m_controller::getRightStickX, m_drivetrain));
+    
+    m_driveChooser.addOption("Joystick Tank Drive", new TankDrive(m_jJoystick::getX, m_jJoystick::getY, m_drivetrain));
+    m_driveChooser.addOption("Joystick Arcade Drive", new ArcadeDrive(m_jJoystick::getY, m_jJoystick::getTwist, m_drivetrain));
   
     // Put SmartDashboard Options onto SmartDashboard
     SmartDashboard.putData("Autonomous Routine", m_autoChooser);
