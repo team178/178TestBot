@@ -7,15 +7,11 @@
 
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.motorcontrol.MotorController;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 
-import java.util.function.DoubleSupplier;
-
-import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
@@ -47,14 +43,7 @@ public class DriveTrain extends SubsystemBase {
     // result in both sides moving forward. Depending on how your robot's
     // gearbox is constructed, you might have to invert the left side instead.
     m_rightMotor.setInverted(false);
-    m_leftMotor.setInverted(true);
-
-    // Sets the distance per pulse for the encoders
-    leftMaster.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute, 0, 10);
-    rightMaster.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute, 0, 10);
-    
-    leftMaster.setSensorPhase(true);
-    rightMaster.setSensorPhase(false);
+    m_leftMotor.setInverted(true);;
 
     addChild("Drive", m_drive);
   }
@@ -78,31 +67,6 @@ public class DriveTrain extends SubsystemBase {
   public void arcadeDrive(double fwd, double rot) {
     m_drive.arcadeDrive(fwd, rot);
   }
-
-  /** Reset the robots sensors to the zero states. */
-  public void reset() {
-    leftMaster.setSelectedSensorPosition(0);
-    rightMaster.setSelectedSensorPosition(0);
-  }
-
-  /**
-   * Gets the left drive encoder.
-   *
-   * @return the left drive encoder
-   */
-  public double getLeftEncoder() {
-    return leftMaster.getSelectedSensorPosition(0);
-  }
-
-  /**
-   * Gets the right drive encoder.
-   *
-   * @return the right drive encoder
-   */
-  public double getRightEncoder() {
-    return rightMaster.getSelectedSensorPosition(0);
-  }
-
 
   @Override
   public void periodic() {}
