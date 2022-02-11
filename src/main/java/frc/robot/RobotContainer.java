@@ -115,8 +115,14 @@ public class RobotContainer {
       .add("Drive Routine", m_driveChooser)
         .withSize(2, 1);
 
-    OIConstants.kDriveSpeedMult = driveBaseTab
-    .add("Max Speed", 1)
+    OIConstants.kDriveSpeedMult1 = driveBaseTab
+    .add("Max Speed for Joystick 1", 1)
+      .withWidget(BuiltInWidgets.kNumberSlider)
+        .withProperties(Map.of("min", 0, "max", 2)) // specify widget properties here
+          .getEntry();
+    
+    OIConstants.kDriveSpeedMult2 = driveBaseTab
+    .add("Max Speed for Joystick 2", 1)
       .withWidget(BuiltInWidgets.kNumberSlider)
         .withProperties(Map.of("min", 0, "max", 2)) // specify widget properties here
           .getEntry();
