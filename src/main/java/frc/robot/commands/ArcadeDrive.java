@@ -34,8 +34,8 @@ public class ArcadeDrive extends CommandBase {
   // Called repeatedly when this Command is scheduled to run
   @Override
   public void execute() {
-    double xaxisSpeed = m_xaxisSpeedSupplier.getAsDouble() * OIConstants.kDriveSpeedMult.getDouble(1.0);
-    double zaxisSpeed = m_zaxisRotateSuppplier.getAsDouble() * OIConstants.kDriveSpeedMult.getDouble(1.0);
+    double xaxisSpeed = m_xaxisSpeedSupplier.getAsDouble() * OIConstants.kDriveSpeedMult1.getDouble(1.0);
+    double zaxisSpeed = m_zaxisRotateSuppplier.getAsDouble() * OIConstants.kDriveSpeedMult2.getDouble(1.0);
 
     if(Math.abs(xaxisSpeed) < 0.2) {
         xaxisSpeed = 0;
