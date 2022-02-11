@@ -34,8 +34,8 @@ public class TankDrive extends CommandBase {
   // Called repeatedly when this Command is scheduled to run
   @Override
   public void execute() {
-    double leftSpeed = m_left.getAsDouble() * OIConstants.kDriveSpeedMult.getDouble(1.0);
-    double rightSpeed = m_right.getAsDouble() * OIConstants.kDriveSpeedMult.getDouble(1.0);
+    double leftSpeed = m_left.getAsDouble() * OIConstants.kDriveSpeedMult1.getDouble(1.0);
+    double rightSpeed = m_right.getAsDouble() * OIConstants.kDriveSpeedMult2.getDouble(1.0);
 
     if(Math.abs(leftSpeed) < 0.2) {
       leftSpeed = 0;
