@@ -1,0 +1,21 @@
+{
+  "NetworkTables": {
+    "SmartDashboard": {
+      "Drive Routine": {
+        "open": true
+      },
+      "open": true
+    },
+    "types": {
+      "/FMSInfo": "FMSInfo",
+      "/LiveWindow/DriveTrain/Drive": "DifferentialDrive",
+      "/LiveWindow/Ungrouped/Scheduler": "Scheduler",
+      "/SmartDashboard/Autonomous Routine": "String Chooser",
+      "/SmartDashboard/Drive Routine": "String Chooser"
+    }
+  },
+  "NetworkTables Settings": {
+    "mode": "Client",
+    "serverTeam": "178"
+  }
+}
