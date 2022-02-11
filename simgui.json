@@ -35,6 +35,8 @@
       "/LiveWindow/DriveTrain/Drive": "DifferentialDrive",
       "/LiveWindow/LimeLight": "Subsystem",
       "/LiveWindow/Ungrouped/Scheduler": "Scheduler",
+      "/Shuffleboard/Drive/Autonomous Routine": "String Chooser",
+      "/Shuffleboard/Drive/Drive Routine": "String Chooser",
       "/SmartDashboard/Autnomous Routine": "String Chooser",
       "/SmartDashboard/Drive Routine": "String Chooser"
     },
@@ -80,6 +82,12 @@
       "Ungrouped": {
         "open": true
       }
+    },
+    "Shuffleboard": {
+      "Drive": {
+        "open": true
+      },
+      "open": true
     },
     "SmartDashboard": {
       "open": true

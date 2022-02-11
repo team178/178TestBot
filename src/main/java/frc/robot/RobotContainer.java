@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import java.util.Map;
+
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.cscore.VideoMode.PixelFormat;
@@ -11,12 +13,17 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.LimeLight;
 import libs.IO.ConsoleController;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.OIConstants;
 import frc.robot.commands.ArcadeDrive;
 import frc.robot.commands.TankDrive;
 import frc.robot.commands.aimingTest;
@@ -75,6 +82,7 @@ public class RobotContainer {
 
     // Configure the button bindings
     configureButtonBindings();
+    configureShuffleBoard();
   }
 
   /**
@@ -83,20 +91,37 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a {@link
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
-  private void configureButtonBindings() {
+  private void configureButtonBindings() {}
 
-    // Setup SmartDashboard options
-    m_autoChooser.setDefaultOption("Aiming Using Vision", new aimingTest(m_drivetrain, m_limelight));
+  private void configureShuffleBoard() {
 
+    //Drive Routine Options (How our robot is going to drive)
     m_driveChooser.setDefaultOption("Controller Tank Drive", new TankDrive(m_controller::getLeftStickY, m_controller::getRightStickY, m_drivetrain));
     m_driveChooser.addOption("Controller Arcade Drive", new ArcadeDrive(m_controller::getLeftStickY, m_controller::getRightStickX, m_drivetrain));
     
     m_driveChooser.addOption("Joystick Tank Drive", new TankDrive(m_jJoystick::getX, m_jJoystick::getY, m_drivetrain));
     m_driveChooser.addOption("Joystick Arcade Drive", new ArcadeDrive(m_jJoystick::getY, m_jJoystick::getTwist, m_drivetrain));
-  
-    // Put SmartDashboard Options onto SmartDashboard
-    SmartDashboard.putData("Autonomous Routine", m_autoChooser);
-    SmartDashboard.putData("Drive Routine", m_driveChooser);
+
+    //Autonomous Chooser Options (How our robot is going to tackle auto)
+    m_autoChooser.setDefaultOption("Aiming Using Vision", new aimingTest(m_drivetrain, m_limelight));
+
+    ShuffleboardTab driveBaseTab = Shuffleboard.getTab("Drivebase");
+
+    driveBaseTab
+      .add("Autonomous Routine", m_autoChooser)
+        .withSize(2, 1);
+
+    driveBaseTab
+      .add("Drive Routine", m_driveChooser)
+        .withSize(2, 1);
+
+    OIConstants.kDriveSpeedMult = driveBaseTab
+    .add("Max Speed", 1)
+      .withWidget(BuiltInWidgets.kNumberSlider)
+        .withProperties(Map.of("min", 0, "max", 2)) // specify widget properties here
+          .getEntry();
+
+    
   }
 
   /**
