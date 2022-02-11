@@ -43,6 +43,7 @@ public final class Constants {
     public static final int kJoystickPort = 0;
     public static final int kControllerPort = 1;
 
-    public static NetworkTableEntry kDriveSpeedMult;
+    public static NetworkTableEntry kDrive1SpeedMult;
+    public static NetworkTableEntry kDrive2SpeedMult;
   }
 }
