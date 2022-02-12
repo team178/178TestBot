@@ -15,7 +15,7 @@ public class LimeLight extends SubsystemBase {
     private boolean isConnected = false;
 
     public LimeLight() {
-        table = NetworkTableInstance.getDefault().getTable("limelight");
+    table = NetworkTableInstance.getDefault().getTable("limelight");
     }
     
     public LimeLight(String name) {
