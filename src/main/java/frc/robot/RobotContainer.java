@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
@@ -26,7 +27,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.ArcadeDrive;
 import frc.robot.commands.TankDrive;
+import frc.robot.commands.aimRangeTest;
 import frc.robot.commands.aimingTest;
+import frc.robot.commands.seekTest;
 
 
 /**
@@ -103,31 +106,45 @@ public class RobotContainer {
     m_driveChooser.addOption("Joystick Arcade Drive", new ArcadeDrive(m_jJoystick::getY, m_jJoystick::getTwist, m_drivetrain));
 
     //Autonomous Chooser Options (How our robot is going to tackle auto)
-    m_autoChooser.setDefaultOption("Aiming Using Vision", new aimingTest(m_drivetrain, m_limelight));
+    m_autoChooser.setDefaultOption("Seeking using Vision", new seekTest(m_drivetrain, m_limelight));
+    m_autoChooser.addOption("Aiming using Vision", new aimingTest(m_drivetrain, m_limelight));
+    m_autoChooser.addOption("Aiming and Range Using Vision", new aimRangeTest(m_drivetrain, m_limelight));
 
     ShuffleboardTab driveBaseTab = Shuffleboard.getTab("Drivebase");
 
     driveBaseTab
       .add("Autonomous Routine", m_autoChooser)
-        .withSize(2, 1);
+        .withSize(2, 1)
+          .withPosition(0, 3);
 
     driveBaseTab
       .add("Drive Routine", m_driveChooser)
-        .withSize(2, 1);
+        .withSize(2, 1)
+          .withPosition(0, 0);
 
     OIConstants.kDriveSpeedMult1 = driveBaseTab
     .add("Max Speed for Joystick 1", 1)
       .withWidget(BuiltInWidgets.kNumberSlider)
         .withProperties(Map.of("min", 0, "max", 2)) // specify widget properties here
-          .getEntry();
+          .withPosition(0, 1)
+            .getEntry();
     
     OIConstants.kDriveSpeedMult2 = driveBaseTab
     .add("Max Speed for Joystick 2", 1)
       .withWidget(BuiltInWidgets.kNumberSlider)
         .withProperties(Map.of("min", 0, "max", 2)) // specify widget properties here
-          .getEntry();
+          .withPosition(0, 2)
+            .getEntry();
 
-    
+    ShuffleboardLayout limelightCommands = driveBaseTab
+      .getLayout("Limelight Commands", BuiltInLayouts.kList)
+        .withSize(2, 2)
+          .withPosition(0, 4)
+            .withProperties(Map.of("Label position", "HIDDEN")); // hide labels for commands
+
+    limelightCommands.add(new seekTest(m_drivetrain, m_limelight));
+    limelightCommands.add(new aimingTest(m_drivetrain, m_limelight));
+    limelightCommands.add(new aimRangeTest(m_drivetrain, m_limelight));
   }
 
   /**
