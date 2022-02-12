@@ -14,11 +14,11 @@ public class aimingTest extends CommandBase {
   private final DriveTrain m_drivetrain;
   private final LimeLight m_limelight;
   
-  private double Kp = -0.1;
+  private double Kp = 0.1;
   private double min_command = 0.05;
   private double tolerance = 0.1;
   
-  private double tx;
+  public double tx;
   private double steering_adjust; 
   private double heading_error;
 
@@ -49,15 +49,18 @@ public class aimingTest extends CommandBase {
     
     if (tx > 1.0){
           steering_adjust = Kp*heading_error - min_command;
+          //adjusts horizontal change aka drive train turning
+         
     }
     else if (tx < 1.0){
       steering_adjust = Kp*heading_error + min_command;
+     
     }
-      
+      System.out.println(tx);
     m_left += steering_adjust;
     m_right -= steering_adjust;
 
-    m_drivetrain.tankDrive(m_left, m_right);
+    m_drivetrain.tankDrive(m_left * 0.5, m_right * 0.5);
   }
 
   // Called once the command ends or is interrupted.
