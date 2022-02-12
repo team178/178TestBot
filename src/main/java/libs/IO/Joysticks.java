@@ -47,6 +47,8 @@ public class Joysticks {
     public Joysticks() {
     }
 
+	
+
     public double getX() {
 		return joystickMain.getX(); //joystick.getRawAxis(0);
 	}

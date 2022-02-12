@@ -110,18 +110,22 @@ public class RobotContainer {
     m_autoChooser.addOption("Aiming using Vision", new aimingTest(m_drivetrain, m_limelight));
     m_autoChooser.addOption("Aiming and Range Using Vision", new aimRangeTest(m_drivetrain, m_limelight));
 
+    //Creates new Shuffleboard tab called Drivebase
     ShuffleboardTab driveBaseTab = Shuffleboard.getTab("Drivebase");
 
+    //Adds a chooser to the Drivebase tab to select autonomous routine (before anything is ran)
     driveBaseTab
       .add("Autonomous Routine", m_autoChooser)
         .withSize(2, 1)
           .withPosition(0, 3);
 
+    //Adds a chooser to the Drivebase tab to select drive routine (before anything is ran)
     driveBaseTab
       .add("Drive Routine", m_driveChooser)
         .withSize(2, 1)
           .withPosition(0, 0);
-
+    
+    //Adds a slider to the Drivebase tab so driver can adjust sensitivity for input 1 of the given drive command 
     OIConstants.kDriveSpeedMult1 = driveBaseTab
     .add("Max Speed for Joystick 1", 1)
       .withWidget(BuiltInWidgets.kNumberSlider)
@@ -129,6 +133,7 @@ public class RobotContainer {
           .withPosition(0, 1)
             .getEntry();
     
+    //Adds a slider to the Drivebase tab so driver can adjust sensitivity for input 2 of the given drive command 
     OIConstants.kDriveSpeedMult2 = driveBaseTab
     .add("Max Speed for Joystick 2", 1)
       .withWidget(BuiltInWidgets.kNumberSlider)
@@ -136,15 +141,31 @@ public class RobotContainer {
           .withPosition(0, 2)
             .getEntry();
 
+    //Adds a Layout (basically a empty list) to the Drivebase tab for Limelight Commands 
     ShuffleboardLayout limelightCommands = driveBaseTab
       .getLayout("Limelight Commands", BuiltInLayouts.kList)
         .withSize(2, 2)
           .withPosition(0, 4)
             .withProperties(Map.of("Label position", "HIDDEN")); // hide labels for commands
-
+    
+    //Adds buttons to the aforementioned Layout that run Limelight related commands when selected
     limelightCommands.add(new seekTest(m_drivetrain, m_limelight));
     limelightCommands.add(new aimingTest(m_drivetrain, m_limelight));
     limelightCommands.add(new aimRangeTest(m_drivetrain, m_limelight));
+
+    //Adds a Layout (basically a empty list) to the Drivebase tab for Drive Commands which will allow drivers to change from TankDrive to Arcade drive (or any drive command) on the spot  
+    ShuffleboardLayout driveCommands = driveBaseTab
+      .getLayout("Drive Commands", BuiltInLayouts.kList)
+        .withSize(2, 2)
+          .withPosition(0, 6)
+            .withProperties(Map.of("Label position", "HIDDEN")); // hide labels for commands
+
+    //Adds buttons to the aforementioned Layout that run drive commands when selected
+    driveCommands.add("Controller Tank Drive", new TankDrive(m_controller::getLeftStickY, m_controller::getRightStickY, m_drivetrain));
+    driveCommands.add("Controller Arcade Drive", new ArcadeDrive(m_controller::getLeftStickY, m_controller::getRightStickX, m_drivetrain));
+
+    driveCommands.add("Joystick Tank Drive", new TankDrive(m_jJoystick::getX, m_jJoystick::getY, m_drivetrain));
+    driveCommands.add("Joystick Arcade Drive", new ArcadeDrive(m_jJoystick::getY, m_jJoystick::getTwist, m_drivetrain));
   }
 
   /**
