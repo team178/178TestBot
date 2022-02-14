@@ -6,6 +6,7 @@ package frc.robot.commands;
 
 import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.DriveTrain;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 import java.util.function.DoubleSupplier;
@@ -14,8 +15,8 @@ import java.util.function.DoubleSupplier;
 public class ArcadeDrive extends CommandBase {
   private final DriveTrain m_drivetrain;
 
-  private DoubleSupplier m_xaxisSpeedSupplier;
-  private DoubleSupplier m_zaxisRotateSuppplier;
+  private SendableChooser<DoubleSupplier> m_xaxisSpeedSupplier;
+  private SendableChooser<DoubleSupplier> m_zaxisRotateSuppplier;
 
   /**
    * Creates a new TankDrive command.
@@ -24,7 +25,7 @@ public class ArcadeDrive extends CommandBase {
    * @param zaxisRotateSuppplier The control input for the z axis of the drive
    * @param drivetrain The drivetrain subsystem to drive
    */
-  public ArcadeDrive(DoubleSupplier xaxisSpeedSupplier, DoubleSupplier zaxisRotateSuppplier, DriveTrain drivetrain) {
+  public ArcadeDrive(SendableChooser<DoubleSupplier> xaxisSpeedSupplier, SendableChooser<DoubleSupplier> zaxisRotateSuppplier, DriveTrain drivetrain) {
     m_drivetrain = drivetrain;
     m_xaxisSpeedSupplier = xaxisSpeedSupplier;
     m_zaxisRotateSuppplier = zaxisRotateSuppplier;
@@ -34,8 +35,8 @@ public class ArcadeDrive extends CommandBase {
   // Called repeatedly when this Command is scheduled to run
   @Override
   public void execute() {
-    double xaxisSpeed = m_xaxisSpeedSupplier.getAsDouble() * OIConstants.kDriveSpeedMult1.getDouble(1.0);
-    double zaxisSpeed = m_zaxisRotateSuppplier.getAsDouble() * OIConstants.kDriveSpeedMult2.getDouble(1.0);
+    double xaxisSpeed = m_xaxisSpeedSupplier.getSelected().getAsDouble() * OIConstants.kDriveSpeedMult1.getDouble(1.0);
+    double zaxisSpeed = m_zaxisRotateSuppplier.getSelected().getAsDouble() * OIConstants.kDriveSpeedMult2.getDouble(1.0);
 
     if(Math.abs(xaxisSpeed) < 0.2) {
         xaxisSpeed = 0;

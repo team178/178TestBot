@@ -5,6 +5,9 @@
 package frc.robot;
 
 import java.util.Map;
+import java.util.function.DoubleSupplier;
+
+import com.fasterxml.jackson.databind.ser.std.NumberSerializers.DoubleSerializer;
 
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
@@ -45,7 +48,7 @@ public class RobotContainer {
 
   //Creates joystick object for the Main and Aux controllers
   private final ConsoleController m_controller = new ConsoleController(0);
-  private final Joystick m_jJoystick = new Joystick(0);
+  private final Joystick m_joystick = new Joystick(0);
 
   //USB Camera declarations
   private final UsbCamera camera1;
@@ -54,6 +57,10 @@ public class RobotContainer {
   // Create SmartDashboard chooser for autonomous routines and drive
   private final SendableChooser<Command> m_autoChooser = new SendableChooser<>();
   private final SendableChooser<Command> m_driveChooser = new SendableChooser<>();
+
+  //Creates SmartDashboard chooser for drive axises (for example - Right Joystick Y controls Left side of the robot in TankDrive)
+  private final SendableChooser<DoubleSupplier> m_driveAxis1 = new SendableChooser<>();
+  private final SendableChooser<DoubleSupplier> m_driveAxis2 = new SendableChooser<>(); 
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -99,13 +106,39 @@ public class RobotContainer {
   }
 
   private void configureShuffleBoard() {
+    //Drive Axis Control Options (example - LeftStickY)
+    m_driveAxis1.setDefaultOption("Left Controller Stick Y", m_controller::getLeftStickY); 
+      
+      //For the Xbox Controller
+      m_driveAxis1.addOption("Left Controller Stick X", m_controller::getLeftStickX);
+      m_driveAxis1.addOption("Right Controller Stick X", m_controller::getRightStickX);
+      m_driveAxis1.addOption("Right Controller Stick Y", m_controller::getRightStickY);
+      m_driveAxis1.addOption("Left Controller Trigger", m_controller::getLeftTrigger);
+      m_driveAxis1.addOption("Right Controller Trigger", m_controller::getRightTrigger);
+
+      //For the Joystick
+      m_driveAxis1.addOption("Joystick X", m_joystick::getX);
+      m_driveAxis1.addOption("Joystick Y", m_joystick::getY);
+      m_driveAxis1.addOption("Joystick Twist", m_joystick::getTwist);
+
+
+    m_driveAxis2.setDefaultOption("Right Controller Stick Y", m_controller::getRightStickY);
+
+      //For the Xbox Controller
+      m_driveAxis2.addOption("Left Controller Stick X", m_controller::getLeftStickX);
+      m_driveAxis2.addOption("Left Controller Stick Y", m_controller::getLeftStickY);
+      m_driveAxis2.addOption("Right Controller Stick X", m_controller::getRightStickX);
+      m_driveAxis2.addOption("Left Controller Trigger", m_controller::getLeftTrigger);
+      m_driveAxis2.addOption("Right Controller Trigger", m_controller::getRightTrigger);
+
+      //For the Joystick
+      m_driveAxis2.addOption("Joystick X", m_joystick::getX);
+      m_driveAxis2.addOption("Joystick Y", m_joystick::getY);
+      m_driveAxis2.addOption("Joystick Twist", m_joystick::getTwist);
 
     //Drive Routine Options (How our robot is going to drive)
-    m_driveChooser.setDefaultOption("Controller Tank Drive", new TankDrive(m_controller::getLeftStickY, m_controller::getRightStickY, m_drivetrain));
-    m_driveChooser.addOption("Controller Arcade Drive", new ArcadeDrive(m_controller::getLeftStickY, m_controller::getRightStickX, m_drivetrain));
-    
-    m_driveChooser.addOption("Joystick Tank Drive", new TankDrive(m_jJoystick::getX, m_jJoystick::getY, m_drivetrain));
-    m_driveChooser.addOption("Joystick Arcade Drive", new ArcadeDrive(m_jJoystick::getY, m_jJoystick::getTwist, m_drivetrain));
+    m_driveChooser.setDefaultOption("Tank Drive", new TankDrive(m_driveAxis1, m_driveAxis2, m_drivetrain));
+    m_driveChooser.addOption("Arcade Drive", new ArcadeDrive(m_driveAxis1, m_driveAxis2, m_drivetrain));
 
     //Autonomous Chooser Options (How our robot is going to tackle auto)
     m_autoChooser.setDefaultOption("Seeking using Vision", new seekTest(m_drivetrain, m_limelight));
@@ -126,6 +159,18 @@ public class RobotContainer {
       .add("Drive Routine", m_driveChooser)
         .withSize(2, 1)
           .withPosition(0, 0);
+    
+    //Adds a chooser to the Drivebase tab to select drive axis 1 (before anything is ran)
+    driveBaseTab
+      .add("Drive Axis 1", m_driveAxis1)
+        .withSize(2, 1)
+          .withPosition(2, 0);
+
+    //Adds a chooser to the Drivebase tab to select drive axis 2 (before anything is ran)
+    driveBaseTab
+      .add("Drive Axis 2", m_driveAxis2)
+        .withSize(2, 1)
+          .withPosition(2, 3);
     
     //Adds a slider to the Drivebase tab so driver can adjust sensitivity for input 1 of the given drive command 
     OIConstants.kDriveSpeedMult1 = driveBaseTab
@@ -163,11 +208,8 @@ public class RobotContainer {
             .withProperties(Map.of("Label position", "HIDDEN")); // hide labels for commands
 
     //Adds buttons to the aforementioned Layout that run drive commands when selected
-    driveCommands.add("Controller Tank Drive", new TankDrive(m_controller::getLeftStickY, m_controller::getRightStickY, m_drivetrain));
-    driveCommands.add("Controller Arcade Drive", new ArcadeDrive(m_controller::getLeftStickY, m_controller::getRightStickX, m_drivetrain));
-
-    driveCommands.add("Joystick Tank Drive", new TankDrive(m_jJoystick::getX, m_jJoystick::getY, m_drivetrain));
-    driveCommands.add("Joystick Arcade Drive", new ArcadeDrive(m_jJoystick::getY, m_jJoystick::getTwist, m_drivetrain));
+    driveCommands.add("Tank Drive", new TankDrive(m_driveAxis1, m_driveAxis2, m_drivetrain));
+    driveCommands.add("Arcade Drive", new ArcadeDrive(m_driveAxis1, m_driveAxis2, m_drivetrain));
   }
 
   /**
