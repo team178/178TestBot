@@ -51,12 +51,16 @@ public class DriveTrain extends SubsystemBase {
     m_rightMotor.setInverted(false);
     m_leftMotor.setInverted(true);
     
+    // Configs encoders to their factory defaults
+    leftMaster.configFactoryDefault();
+    rightMaster.configFactoryDefault();
+    
     // Sets the distance per pulse for the encoders
     leftMaster.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute, 0, 10);
     rightMaster.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute, 0, 10);
     
-    leftMaster.setSensorPhase(false);
-    rightMaster.setSensorPhase(true);
+    leftMaster.setSensorPhase(false); // Technically these two setSensorPhase calls are redundant because setInverted should flip them for us 
+    rightMaster.setSensorPhase(true); // Keeping it for now though as it ensures we have the right Sensor Phase
     
     leftPosition = () -> leftMaster.getSelectedSensorPosition(0) * DriveConstants.kEncoderDistancePerPulse; //r
     leftRate = () -> leftMaster.getSelectedSensorVelocity(0) * DriveConstants.kEncoderDistancePerPulse * 10; //r
