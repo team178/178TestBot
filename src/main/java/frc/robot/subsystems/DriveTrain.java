@@ -62,10 +62,10 @@ public class DriveTrain extends SubsystemBase {
     leftMaster.setSensorPhase(false); // Technically these two setSensorPhase calls are redundant because setInverted should flip them for us 
     rightMaster.setSensorPhase(true); // Keeping it for now though as it ensures we have the right Sensor Phase
     
-    leftPosition = () -> leftMaster.getSelectedSensorPosition(0) * DriveConstants.kEncoderDistancePerPulse; //r
-    leftRate = () -> leftMaster.getSelectedSensorVelocity(0) * DriveConstants.kEncoderDistancePerPulse * 10; //r
-    rightPosition = () -> rightMaster.getSelectedSensorPosition(0) * DriveConstants.kEncoderDistancePerPulse; //l
-    rightRate = () -> rightMaster.getSelectedSensorVelocity(0) * DriveConstants.kEncoderDistancePerPulse * 10; //l
+    leftPosition = () -> leftMaster.getSelectedSensorPosition(0) * DriveConstants.kEncoderDistancePerPulse; 
+    leftRate = () -> leftMaster.getSelectedSensorVelocity(0) * DriveConstants.kEncoderDistancePerPulse * 10; // Gives Velocity in Rotations per Second
+    rightPosition = () -> rightMaster.getSelectedSensorPosition(0) * DriveConstants.kEncoderDistancePerPulse; 
+    rightRate = () -> rightMaster.getSelectedSensorVelocity(0) * DriveConstants.kEncoderDistancePerPulse * 10; // Gives Velocity in Rotations per Second
 
     addChild("Drive", m_drive);
   }
