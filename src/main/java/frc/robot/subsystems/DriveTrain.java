@@ -28,6 +28,12 @@ public class DriveTrain extends SubsystemBase {
 
   private final WPI_TalonSRX rightMaster = new WPI_TalonSRX(DriveConstants.kRightMotor1Port);
   private final WPI_VictorSPX rightSlave = new WPI_VictorSPX(DriveConstants.kRightMotor2Port);
+  
+  //Encoder methods
+  public DoubleSupplier leftPosition;
+  public DoubleSupplier rightPosition;
+  public DoubleSupplier leftRate;
+  public DoubleSupplier rightRate;
 
   private final MotorController m_leftMotor =
     new MotorControllerGroup(leftMaster, leftSlave);
@@ -43,7 +49,19 @@ public class DriveTrain extends SubsystemBase {
     // result in both sides moving forward. Depending on how your robot's
     // gearbox is constructed, you might have to invert the left side instead.
     m_rightMotor.setInverted(false);
-    m_leftMotor.setInverted(true);;
+    m_leftMotor.setInverted(true);
+    
+    // Sets the distance per pulse for the encoders
+    leftMaster.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute, 0, 10);
+    rightMaster.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute, 0, 10);
+    
+    leftMaster.setSensorPhase(false);
+    rightMaster.setSensorPhase(true);
+    
+    leftPosition = () -> leftMaster.getSelectedSensorPosition(0) * DriveConstants.kEncoderDistancePerPulse; //r
+    leftRate = () -> leftMaster.getSelectedSensorVelocity(0) * DriveConstants.kEncoderDistancePerPulse * 10; //r
+    rightPosition = () -> rightMaster.getSelectedSensorPosition(0) * DriveConstants.kEncoderDistancePerPulse; //l
+    rightRate = () -> rightMaster.getSelectedSensorVelocity(0) * DriveConstants.kEncoderDistancePerPulse * 10; //l
 
     addChild("Drive", m_drive);
   }
@@ -68,7 +86,69 @@ public class DriveTrain extends SubsystemBase {
     m_drive.arcadeDrive(fwd, rot);
   }
 
+  /** Reset the robots sensors to the zero states. */
+  public void reset() {
+    leftMaster.setSelectedSensorPosition(0);
+    rightMaster.setSelectedSensorPosition(0);
+  }
+
+  /**
+   * Gets the left drive encoder.
+   *
+   * @return the left drive encoder
+   */
+  public double getLeftEncoder() {
+    return leftMaster.getSelectedSensorPosition(0);
+  }
+
+  /**
+   * Gets the right drive encoder.
+   *
+   * @return the right drive encoder
+   */
+  public double getRightEncoder() {
+    return rightMaster.getSelectedSensorPosition(0);
+  }
+
+  /**
+   * Get the distance of the left encoder since the last reset.
+   *
+   * @return The distance driven using the left encoder.
+   */
+  public double getLeftDistance(){
+    return leftPosition.getAsDouble();
+  }
+
+  /**
+   * Get the distance of the right encoder since the last reset.
+   *
+   * @return The distance driven using the right encoder.
+   */
+  public double getRightDistance(){
+    return rightPosition.getAsDouble();
+  }
+
+    /**
+   * Get the average distance of the encoders since the last reset.
+   *
+   * @return The distance driven (average of left and right encoders).
+   */
+  public double getDistance() {
+    return (getLeftDistance() + getRightDistance()) / 2;
+  }
+
+
+  /** The log method puts interesting information to the SmartDashboard. */
+  public void log() {
+    SmartDashboard.putNumber("Left Distance", leftPosition.getAsDouble());
+    SmartDashboard.putNumber("Right Distance", rightPosition.getAsDouble());
+    SmartDashboard.putNumber("Left Speed", leftRate.getAsDouble());
+    SmartDashboard.putNumber("Right Speed", rightRate.getAsDouble());
+  }
+
   @Override
-  public void periodic() {}
+  public void periodic() {
+    log();
+  }
 
 }
