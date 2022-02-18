@@ -39,7 +39,7 @@ public class modifiedAim extends CommandBase {
    *
    * @param subsystem The subsystem used by this command.
    */
-  public aimingTest(DriveTrain drivetrain, LimeLight limelight) {
+  public modifiedAim(DriveTrain drivetrain, LimeLight limelight) {
     m_drivetrain = drivetrain;
     m_limelight = limelight;
     
@@ -63,13 +63,13 @@ public class modifiedAim extends CommandBase {
       steering_adjust = Kp*heading_error - min_command;
     }
       
-    m_drivetrain.arcadeDrive(0, steer_adjust);
+    m_drivetrain.arcadeDrive(0, steering_adjust);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_drivetrain.drive(0, 0);
+    m_drivetrain.arcadeDrive(0, 0);
   }
 
   // Returns true when the command should end.

@@ -52,7 +52,7 @@ public class TurnDegrees extends CommandBase {
   @Override
   public boolean isFinished() {
     // Need to convert distance travelled to degrees. 
-    double inchPerDegree = Math.PI * DriveConstants.kWheelDiameterInches / 360;
+    double inchPerDegree = Math.PI * DriveConstants.kWheelDiameterMeters / 360;
     
     // Compare distance travelled from start to distance based on degree turn
     return getAverageTurningDistance() >= (inchPerDegree * m_degrees);
