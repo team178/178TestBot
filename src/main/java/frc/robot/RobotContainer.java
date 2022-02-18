@@ -145,6 +145,7 @@ public class RobotContainer {
     m_autoChooser.setDefaultOption("Seeking using Vision", new seekTest(m_drivetrain, m_limelight));
     m_autoChooser.addOption("Aiming using Vision", new aimingTest(m_drivetrain, m_limelight));
     m_autoChooser.addOption("Aiming and Range Using Vision", new aimRangeTest(m_drivetrain, m_limelight));
+    m_autoChooser.addOption("Modified Aim", new modifiedAim(m_drivetrain, m_limelight));
 
     //Creates new Shuffleboard tab called Drivebase
     ShuffleboardTab driveBaseTab = Shuffleboard.getTab("Drivebase");

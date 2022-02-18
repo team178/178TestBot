@@ -31,9 +31,6 @@ public class modifiedAim extends CommandBase {
   private double steering_adjust; 
   private double heading_error;
 
-  private double m_left;
-  private double m_right; 
-
   /**
    * Creates a new ExampleCommand.
    *
@@ -57,7 +54,7 @@ public class modifiedAim extends CommandBase {
     heading_error = tolerance; // Previously this was negative (adjust if robot is not turning correctly)
     
     if (tx > tolerance){
-          steering_adjust = Kp*heading_error + min_command;
+      steering_adjust = Kp*heading_error + min_command;
     }
     else if (tx < -tolerance){
       steering_adjust = Kp*heading_error - min_command;
