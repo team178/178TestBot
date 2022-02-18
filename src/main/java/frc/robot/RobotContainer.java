@@ -33,6 +33,7 @@ import frc.robot.commands.TankDrive;
 import frc.robot.commands.aimRangeTest;
 import frc.robot.commands.aimingTest;
 import frc.robot.commands.seekTest;
+import frc.robot.commands.modifiedAim;
 
 
 /**
@@ -199,6 +200,7 @@ public class RobotContainer {
     limelightCommands.add(new seekTest(m_drivetrain, m_limelight));
     limelightCommands.add(new aimingTest(m_drivetrain, m_limelight));
     limelightCommands.add(new aimRangeTest(m_drivetrain, m_limelight));
+    limelightCommands.add(new modifiedAim(m_drivetrain, m_limelight));
 
     //Adds a Layout (basically a empty list) to the Drivebase tab for Drive Commands which will allow drivers to change from TankDrive to Arcade drive (or any drive command) on the spot  
     ShuffleboardLayout driveCommands = driveBaseTab
