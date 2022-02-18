@@ -18,7 +18,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
     
 */
 
-public class modfiedAim extends CommandBase {
+public class modifiedAim extends CommandBase {
 
   private final DriveTrain m_drivetrain;
   private final LimeLight m_limelight;
