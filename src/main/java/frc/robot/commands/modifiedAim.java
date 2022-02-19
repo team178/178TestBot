@@ -23,13 +23,18 @@ public class modifiedAim extends CommandBase {
   private final DriveTrain m_drivetrain;
   private final LimeLight m_limelight;
   
-  private double Kp = 0.03; // Speed Constant, should ensure we're not overshooting and getting out of range
-  private double min_command = 0.05; // Min Command ensures our low kP doesn't make out robot stop as it gets closer to the tolerance (allows the robot keep moving)
-  private double tolerance = 1; // Once it reads that limelight is within the tolerance, command ends
+  private final double Ka = .005;
+  private final double Kp = 0.008; // Speed Constant, should ensure we're not overshooting and getting out of range
+  private final double min_command = 0.365; // Min Command ensures our low kP doesn't make out robot stop as it gets closer to the tolerance (allows the robot keep moving)
+  private final double rotation_tolerance = .8; // Once it reads that limelight is within the tolerance, command ends
+  private final double distance_tolerance = .03;
   
+  private double ta;
   private double tx;
   private double steering_adjust; 
-  private double heading_error;
+  private double distance_adjust;
+  private double rotation_error;
+  private double distance_error;
 
   /**
    * Creates a new ExampleCommand.
@@ -45,24 +50,53 @@ public class modifiedAim extends CommandBase {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+  steering_adjust = 0 ;
+  distance_adjust = 0;
+  ta = 0;
+  tx = 0;
+  
+  rotation_error = 0;
+  distance_error = 0;
+
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    ta =m_limelight.getTargetArea();
+      distance_error = -ta;
     tx = m_limelight.getHorizontalDegToTarget();
-    heading_error = tolerance; // Previously this was negative (adjust if robot is not turning correctly)
+      rotation_error = -tx;
+     // Previously this was negative (adjust if robot is not turning correctly)
     
-    if (tx > tolerance){
-      steering_adjust = Kp*heading_error + min_command;
+    if (rotation_error > rotation_tolerance){
+      steering_adjust = Kp*rotation_error + min_command;
     }
-    else if (tx < -tolerance){
-      steering_adjust = Kp*heading_error - min_command;
+    else if (rotation_error < rotation_tolerance){
+      steering_adjust = Kp*rotation_error - min_command;
     }
-      
-    m_drivetrain.arcadeDrive(0, steering_adjust);
-  }
+    
+    if (distance_error > distance_tolerance) {
+      distance_adjust = Ka*distance_error + min_command;
+      System.out.println("Dis worky");
+    
+    }
 
+    else if(distance_error < distance_tolerance){
+      System.out.println("Go");
+      distance_adjust = Ka*distance_error - min_command;
+    }
+    
+   
+    
+    
+   System.out.println("SA: " + steering_adjust);
+      //System.out.println("tx: "+rotation_error);
+   System.out.println("DE: "+ distance_adjust);
+    m_drivetrain.arcadeDrive(distance_adjust, steering_adjust);//0,steering_adjust
+   }
+   
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
@@ -72,6 +106,12 @@ public class modifiedAim extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Math.abs(heading_error) <= tolerance;
+    
+    boolean isFinished = ( Math.abs(rotation_error) <= rotation_tolerance) && Math.abs(distance_error)< distance_tolerance;
+    System.out.println("Finished is "+isFinished);
+    return(isFinished);
   }
+      
+      
 }
+
