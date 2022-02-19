@@ -35,6 +35,7 @@ import frc.robot.commands.aimRangeTest;
 import frc.robot.commands.aimingTest;
 import frc.robot.commands.seekTest;
 import frc.robot.commands.modifiedAim;
+import frc.robot.commands.modifiedRange;
 
 
 /**
@@ -200,10 +201,8 @@ public class RobotContainer {
             .withProperties(Map.of("Label position", "HIDDEN")); // hide labels for commands
     
     //Adds buttons to the aforementioned Layout that run Limelight related commands when selected
-    limelightCommands.add(new seekTest(m_drivetrain, m_limelight));
-    limelightCommands.add(new aimingTest(m_drivetrain, m_limelight));
-    limelightCommands.add(new aimRangeTest(m_drivetrain, m_limelight));
     limelightCommands.add(new modifiedAim(m_drivetrain, m_limelight));
+    limelightCommands.add(new modifiedRange(m_drivetrain, m_limelight));
 
     //Adds a Layout (basically a empty list) to the Drivebase tab for Drive Commands which will allow drivers to change from TankDrive to Arcade drive (or any drive command) on the spot  
     ShuffleboardLayout driveCommands = driveBaseTab
@@ -222,7 +221,7 @@ public class RobotContainer {
         .withSize(2, 2)
           .withPosition(6, 4);
     
-    DriveConstants.kMinSpeed = driveConstants.add("Min Speed", .345)
+    DriveConstants.kMinTurnSpeed = driveConstants.add("Min Speed", .345)
     .withWidget(BuiltInWidgets.kNumberSlider)
       .withProperties(Map.of("min", 0, "max", .5)) // specify widget properties here
           .getEntry();

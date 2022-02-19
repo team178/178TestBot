@@ -37,9 +37,9 @@ public final class Constants {
     public static NetworkTableEntry kDriveI;
     public static NetworkTableEntry kDriveD;
 
-    public static NetworkTableEntry kMinSpeed;
+    public static NetworkTableEntry kMinTurnSpeed;
+    public static NetworkTableEntry kMinDriveSpeed;
   }
-
   public static final class OIConstants {
     public static final int kJoystickPort = 0;
     public static final int kControllerPort = 1;
