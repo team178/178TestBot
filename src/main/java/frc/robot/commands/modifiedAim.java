@@ -23,11 +23,11 @@ public class modifiedAim extends CommandBase {
   private final DriveTrain m_drivetrain;
   private final LimeLight m_limelight;
   
-  private final double Ka = .005;
+  private final double Ka = .01;
   private final double Kp = 0.008; // Speed Constant, should ensure we're not overshooting and getting out of range
   private final double min_command = 0.365; // Min Command ensures our low kP doesn't make out robot stop as it gets closer to the tolerance (allows the robot keep moving)
   private final double rotation_tolerance = .8; // Once it reads that limelight is within the tolerance, command ends
-  private final double distance_tolerance = .03;
+  private final double distance_tolerance = 5;
   
   private double ta;
   private double tx;
