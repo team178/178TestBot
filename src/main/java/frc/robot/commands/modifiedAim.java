@@ -23,9 +23,11 @@ public class modifiedAim extends CommandBase {
   private final DriveTrain m_drivetrain;
   private final LimeLight m_limelight;
   
+  private double Ka = .005;
   private double Kp = 0.008; // Speed Constant, should ensure we're not overshooting and getting out of range
   private double min_command = 0.365; // Min Command ensures our low kP doesn't make out robot stop as it gets closer to the tolerance (allows the robot keep moving)
-  private double tolerance = .8; // Once it reads that limelight is within the tolerance, command ends
+  private double rotation_tolerance = .8; // Once it reads that limelight is within the tolerance, command ends
+  private double distance_tolerance = .03;
   
   private double ta;
   private double tx;
@@ -50,6 +52,7 @@ public class modifiedAim extends CommandBase {
   @Override
   public void initialize() {
 steering_adjust = 0 ;
+distance_adjust = 0;
 
   }
 
@@ -62,22 +65,30 @@ steering_adjust = 0 ;
       rotation_error = -tx;
      // Previously this was negative (adjust if robot is not turning correctly)
     
-    if (rotation_error > tolerance){
+    if (rotation_error > rotation_tolerance){
       steering_adjust = Kp*rotation_error + min_command;
     }
-    else if (rotation_error < tolerance){
+    else if (rotation_error < rotation_tolerance){
       steering_adjust = Kp*rotation_error - min_command;
     }
-    if(distance_error < .0001){
+    if(distance_error < distance_tolerance){
       System.out.println("Go");
+      distance_adjust = Ka*distance_error - min_command;
 
     }
-    else
-      System.out.println("Stop");
-
-
+    else if(distance_error > distance_tolerance) {
+      distance_adjust = Ka*distance_error + min_command;
+      System.out.println("Dis worky");
+    }
+    /*
+    else if(distance_error>.1){
+      //System.out.println("Back");
+    distance_adjust = .6;} */
+    
+    
       System.out.println("SA: " + steering_adjust);
-      System.out.println("tx: "+rotation_error);
+      //System.out.println("tx: "+rotation_error);
+      System.out.println("DE: "+ distance_adjust);
     m_drivetrain.arcadeDrive(distance_adjust, steering_adjust);//0,steering_adjust
   }
 
@@ -91,7 +102,7 @@ steering_adjust = 0 ;
   @Override
   public boolean isFinished() {
 
-    if( Math.abs(rotation_error) <= tolerance){
+    if(( Math.abs(rotation_error) <= rotation_tolerance) && Math.abs(distance_error)< distance_tolerance){
       System.out.println("Finished");
         return true;
 
