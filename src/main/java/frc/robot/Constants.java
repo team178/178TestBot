@@ -29,15 +29,15 @@ public final class Constants {
         // Assumes the encoders are directly mounted on the wheel shafts
         (kWheelDiameterMeters * Math.PI) / (double) kEncoderCPR;
 
-    public static final double kTurnP = 1;
-    public static final double kTurnI = 0;
-    public static final double kTurnD = 0;
+    public static NetworkTableEntry kTurnP;
+    public static NetworkTableEntry kTurnI;
+    public static NetworkTableEntry kTurnD;
 
-    public static final double kMaxTurnRateDegPerS = 100;
-    public static final double kMaxTurnAccelerationDegPerSSquared = 300;
+    public static NetworkTableEntry kDriveP;
+    public static NetworkTableEntry kDriveI;
+    public static NetworkTableEntry kDriveD;
 
-    public static final double kTurnToleranceDeg = 5;
-    public static final double kTurnRateToleranceDegPerS = 10; // degrees per second
+    public static NetworkTableEntry kMinSpeed;
   }
 
   public static final class OIConstants {

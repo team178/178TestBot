@@ -27,6 +27,7 @@ import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.LimeLight;
 import libs.IO.ConsoleController;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.ArcadeDrive;
 import frc.robot.commands.TankDrive;
@@ -189,12 +190,13 @@ public class RobotContainer {
         .withProperties(Map.of("min", 0, "max", 2)) // specify widget properties here
           .withPosition(0, 2)
             .getEntry();
+    
 
     //Adds a Layout (basically a empty list) to the Drivebase tab for Limelight Commands 
     ShuffleboardLayout limelightCommands = driveBaseTab
       .getLayout("Limelight Commands", BuiltInLayouts.kList)
         .withSize(2, 2)
-          .withPosition(0, 4)
+          .withPosition(2, 4)
             .withProperties(Map.of("Label position", "HIDDEN")); // hide labels for commands
     
     //Adds buttons to the aforementioned Layout that run Limelight related commands when selected
@@ -207,12 +209,29 @@ public class RobotContainer {
     ShuffleboardLayout driveCommands = driveBaseTab
       .getLayout("Drive Commands", BuiltInLayouts.kList)
         .withSize(2, 2)
-          .withPosition(0, 6)
+          .withPosition(4, 6)
             .withProperties(Map.of("Label position", "HIDDEN")); // hide labels for commands
 
     //Adds buttons to the aforementioned Layout that run drive commands when selected
     driveCommands.add("Tank Drive", new TankDrive(m_driveAxis1, m_driveAxis2, m_drivetrain));
     driveCommands.add("Arcade Drive", new ArcadeDrive(m_driveAxis1, m_driveAxis2, m_drivetrain));
+
+    //Adds a Layout (basically a empty list) to the Drivebase tab for Limelight Commands 
+    ShuffleboardLayout driveConstants = driveBaseTab
+      .getLayout("Drive Constants", BuiltInLayouts.kList)
+        .withSize(2, 2)
+          .withPosition(6, 4);
+    
+    DriveConstants.kMinSpeed = driveConstants.add("Min Speed", .345)
+    .withWidget(BuiltInWidgets.kNumberSlider)
+      .withProperties(Map.of("min", 0, "max", .5)) // specify widget properties here
+          .getEntry();
+    
+    DriveConstants.kTurnP = driveConstants.add("kP", 0.03)
+    .withWidget(BuiltInWidgets.kNumberSlider)
+      .withProperties(Map.of("min", 0, "max", .1)) // specify widget properties here
+          .getEntry();
+    
   }
 
   /**

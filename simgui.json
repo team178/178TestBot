@@ -59,6 +59,7 @@
       "/Shuffleboard/Drivebase/Limelight Commands/TankDrive": "Command",
       "/Shuffleboard/Drivebase/Limelight Commands/aimRangeTest": "Command",
       "/Shuffleboard/Drivebase/Limelight Commands/aimingTest": "Command",
+      "/Shuffleboard/Drivebase/Limelight Commands/modifiedAim": "Command",
       "/Shuffleboard/Drivebase/Limelight Commands/seekTest": "Command",
       "/SmartDashboard/Autnomous Routine": "String Chooser",
       "/SmartDashboard/Drive Routine": "String Chooser"
