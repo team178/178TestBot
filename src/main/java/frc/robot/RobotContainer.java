@@ -31,9 +31,8 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.ArcadeDrive;
 import frc.robot.commands.TankDrive;
-import frc.robot.commands.aimRangeTest;
-import frc.robot.commands.aimingTest;
-import frc.robot.commands.seekTest;
+import frc.robot.commands.aimRange;
+import frc.robot.commands.limelightGroupCommand;
 import frc.robot.commands.modifiedAim;
 import frc.robot.commands.modifiedRange;
 
@@ -105,7 +104,6 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    m_controller.a.whenPressed(new aimingTest(m_drivetrain, m_limelight));
   }
 
   private void configureShuffleBoard() {
@@ -144,10 +142,10 @@ public class RobotContainer {
     m_driveChooser.addOption("Arcade Drive", new ArcadeDrive(m_driveAxis1, m_driveAxis2, m_drivetrain));
 
     //Autonomous Chooser Options (How our robot is going to tackle auto)
-    m_autoChooser.setDefaultOption("Seeking using Vision", new seekTest(m_drivetrain, m_limelight));
-    m_autoChooser.addOption("Aiming using Vision", new aimingTest(m_drivetrain, m_limelight));
-    m_autoChooser.addOption("Aiming and Range Using Vision", new aimRangeTest(m_drivetrain, m_limelight));
+    m_autoChooser.setDefaultOption("Modified Range", new modifiedRange(m_drivetrain, m_limelight));
     m_autoChooser.addOption("Modified Aim", new modifiedAim(m_drivetrain, m_limelight));
+    m_autoChooser.addOption("Range and Aim Sequential", new limelightGroupCommand(m_drivetrain, m_limelight));
+    m_autoChooser.addOption("Aim and Range", new aimRange(m_drivetrain, m_limelight));
 
     //Creates new Shuffleboard tab called Drivebase
     ShuffleboardTab driveBaseTab = Shuffleboard.getTab("Drivebase");
