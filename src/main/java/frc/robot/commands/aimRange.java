@@ -22,8 +22,7 @@ public class aimRange extends CommandBase {
   private double KpAngle;
   private double KpMeter;
 
-  private double angleTolerance;
-  private double meterTolerance;
+  private double rangeTolerance;
   
   private double desiredDistance;
 
@@ -83,9 +82,6 @@ public class aimRange extends CommandBase {
     // Initialize Range Fields
     KpAngle = 0.005;
     KpMeter = 0.005;
-
-    angleTolerance = 0.1;
-    meterTolerance = 0.1;
     
     minDriveSpeed = 0.345;
 
@@ -104,22 +100,24 @@ public class aimRange extends CommandBase {
 
     if(!crosshairCalibrated){
         double currentDistance = m_limelight.estimateDistance(0); // Input actually height from target later
+        rangeTolerance = 0.1;
         
         distanceError = desiredDistance - currentDistance;
         driveAdjust = KpMeter * distanceError;
     }
     else{
         double verticalDegTarget = m_limelight.getVerticalDegToTarget();
+        rangeTolerance = 0.1;
 
         distanceError = ((verticalDegTarget != 0) ? -verticalDegTarget : distanceError);
         driveAdjust = KpAngle * distanceError;
     }
 
-    driveAdjust = ((Math.abs(driveAdjust) < minDriveSpeed) ? minDriveSpeed : driveAdjust);
+    driveAdjust = ((Math.abs(driveAdjust) < minDriveSpeed && Math.abs(distanceError) > rangeTolerance) ? minDriveSpeed : driveAdjust); // Added the latter condition to ensure that if the drive adjust ends earlier than the turn adjust, the robot stops moving along the x axis
     driveAdjust = ((distanceError > 0) ? -driveAdjust: driveAdjust);
 
     turnAdjust = KpAim * headingError; // Multiplies our error by our speed constant, that way we have a useable speed
-    turnAdjust = ((Math.abs(turnAdjust) < minTurnSpeed) ? minTurnSpeed : turnAdjust); // Ensures we do go under min speed needed to turn
+    turnAdjust = ((Math.abs(turnAdjust) < minTurnSpeed && Math.abs(distanceError) > aimTolerance) ? minTurnSpeed : turnAdjust); // Ensures we do go under min speed needed to turn
     turnAdjust = ((headingError > 0) ? -turnAdjust : turnAdjust); // Ensures correct directional change
 
     m_drivetrain.arcadeDrive(driveAdjust, turnAdjust);
@@ -134,17 +132,7 @@ public class aimRange extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-      if(Math.abs(headingError) <= aimTolerance){
-        if(!crosshairCalibrated){
-            return Math.abs(distanceError) <= meterTolerance; 
-          }
-          else{
-            return Math.abs(distanceError) <= angleTolerance;
-          }
-      }
-      else{
-          return false;
-      }
-        
+    return (((Math.abs(headingError) <= aimTolerance && Math.abs(distanceError) <= rangeTolerance) ? true : false));
   }
+
 }

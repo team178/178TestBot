@@ -110,11 +110,11 @@ public class modifiedRange extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-      if(!crosshairCalibrated){
-        return Math.abs(distanceError) <= meterTolerance; 
-      }
-      else{
-        return Math.abs(distanceError) <= angleTolerance;
-      }
+    if(!crosshairCalibrated){
+      return Math.abs(distanceError) <= meterTolerance; 
+    }
+    else{
+      return Math.abs(distanceError) <= angleTolerance;
+    }
   }
 }
