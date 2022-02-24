@@ -58,7 +58,7 @@ public class modifiedAim extends CommandBase {
     headingError = ((horizontalDegTarget != 0) ? -horizontalDegTarget : headingError); // Ensures heading error nevers = 0
 
     turnAdjust = Kp * headingError; // Multiplies our error by our speed constant, that way we have a useable speed
-    turnAdjust = ((Math.abs(turnAdjust) < minTurnSpeed) ? minTurnSpeed : turnAdjust); // Ensures we do go under min speed needed to turn
+    turnAdjust = ((Math.abs(turnAdjust) < minTurnSpeed) ? minTurnSpeed + turnAdjust : turnAdjust); // Ensures we don't go under min speed needed to turn
     turnAdjust = ((headingError > 0) ? -turnAdjust : turnAdjust); // Ensures correct directional change
     
     m_drivetrain.arcadeDrive(0, turnAdjust);
