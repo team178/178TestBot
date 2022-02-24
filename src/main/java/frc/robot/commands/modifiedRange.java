@@ -95,7 +95,7 @@ public class modifiedRange extends CommandBase {
         driveAdjust = KpAngle * distanceError;
     }
 
-    driveAdjust = ((Math.abs(driveAdjust) < minDriveSpeed) ? minDriveSpeed : driveAdjust);
+    driveAdjust = ((Math.abs(driveAdjust) < minDriveSpeed) ? minDriveSpeed + driveAdjust : driveAdjust);
     driveAdjust = ((distanceError > 0) ? -driveAdjust: driveAdjust);
 
     m_drivetrain.arcadeDrive(driveAdjust, 0);
