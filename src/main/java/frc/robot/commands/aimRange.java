@@ -113,11 +113,11 @@ public class aimRange extends CommandBase {
         driveAdjust = KpAngle * distanceError;
     }
 
-    driveAdjust = ((Math.abs(driveAdjust) < minDriveSpeed && Math.abs(distanceError) > rangeTolerance) ? minDriveSpeed : driveAdjust); // Added the latter condition to ensure that if the drive adjust ends earlier than the turn adjust, the robot stops moving along the x axis
+    driveAdjust = ((Math.abs(driveAdjust) < minDriveSpeed && Math.abs(distanceError) > rangeTolerance) ? minDriveSpeed + driveAdjust : driveAdjust); // Added the latter condition to ensure that if the drive adjust ends earlier than the turn adjust, the robot stops moving along the x axis
     driveAdjust = ((distanceError > 0) ? -driveAdjust: driveAdjust);
 
     turnAdjust = KpAim * headingError; // Multiplies our error by our speed constant, that way we have a useable speed
-    turnAdjust = ((Math.abs(turnAdjust) < minTurnSpeed && Math.abs(distanceError) > aimTolerance) ? minTurnSpeed : turnAdjust); // Ensures we do go under min speed needed to turn
+    turnAdjust = ((Math.abs(turnAdjust) < minTurnSpeed && Math.abs(distanceError) > aimTolerance) ? minTurnSpeed + turnAdjust : turnAdjust); // Ensures we do go under min speed needed to turn
     turnAdjust = ((headingError > 0) ? -turnAdjust : turnAdjust); // Ensures correct directional change
 
     m_drivetrain.arcadeDrive(driveAdjust, turnAdjust);
