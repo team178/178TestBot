@@ -52,8 +52,8 @@ public class DriveTrain extends SubsystemBase {
     // We need to invert one side of the drivetrain so that positive voltages
     // result in both sides moving forward. Depending on how your robot's
     // gearbox is constructed, you might have to invert the left side instead.
-    m_rightMotor.setInverted(false);
-    m_leftMotor.setInverted(true);
+    m_rightMotor.setInverted(true);
+    m_leftMotor.setInverted(false);
     
     // Configs encoders to their factory defaults
     leftMaster.configFactoryDefault();
@@ -70,6 +70,9 @@ public class DriveTrain extends SubsystemBase {
     leftRate = () -> leftMaster.getSelectedSensorVelocity(0) * DriveConstants.kEncoderDistancePerPulse * 10; // Gives Velocity in Rotations per Second
     rightPosition = () -> rightMaster.getSelectedSensorPosition(0) * DriveConstants.kEncoderDistancePerPulse; 
     rightRate = () -> rightMaster.getSelectedSensorVelocity(0) * DriveConstants.kEncoderDistancePerPulse * 10; // Gives Velocity in Rotations per Second
+
+    m_drive.setSafetyEnabled(false);
+    reset();
 
     addChild("Drive", m_drive);
   }

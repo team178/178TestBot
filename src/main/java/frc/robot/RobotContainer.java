@@ -27,9 +27,11 @@ import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.LimeLight;
 import libs.IO.ConsoleController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.ArcadeDrive;
+import frc.robot.commands.DriveStraight;
 import frc.robot.commands.TankDrive;
 import frc.robot.commands.aimRange;
 import frc.robot.commands.limelightGroupCommand;
@@ -146,6 +148,7 @@ public class RobotContainer {
     m_autoChooser.addOption("Modified Aim", new modifiedAim(m_drivetrain, m_limelight));
     m_autoChooser.addOption("Range and Aim Sequential", new limelightGroupCommand(m_drivetrain, m_limelight));
     m_autoChooser.addOption("Aim and Range", new aimRange(m_drivetrain, m_limelight));
+    //m_autoChooser.addOption("Drive Straight", new DriveStraight(2, m_drivetrain));
 
     //Creates new Shuffleboard tab called Drivebase
     ShuffleboardTab driveBaseTab = Shuffleboard.getTab("Drivebase");
