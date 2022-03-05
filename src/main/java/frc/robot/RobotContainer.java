@@ -144,7 +144,7 @@ public class RobotContainer {
     m_driveChooser.addOption("Arcade Drive", new ArcadeDrive(m_driveAxis1, m_driveAxis2, m_drivetrain));
 
     //Autonomous Chooser Options (How our robot is going to tackle auto)
-    m_autoChooser.setDefaultOption("Modified Range", new modifiedRange(m_drivetrain, m_limelight));
+    m_autoChooser.setDefaultOption("Modified Range", new modifiedRange(m_drivetrain, m_limelight, 4));
     m_autoChooser.addOption("Modified Aim", new modifiedAim(m_drivetrain, m_limelight));
     m_autoChooser.addOption("Range and Aim Sequential", new limelightGroupCommand(m_drivetrain, m_limelight));
     m_autoChooser.addOption("Aim and Range", new aimRange(m_drivetrain, m_limelight));
@@ -244,7 +244,7 @@ public class RobotContainer {
     return m_autoChooser.getSelected();
   }
 
-  public Command getDriveCommand(){
-    return m_driveChooser.getSelected();
+  public void setDriveCommand(){
+    m_drivetrain.setDefaultCommand(m_driveChooser.getSelected());
   }
 }

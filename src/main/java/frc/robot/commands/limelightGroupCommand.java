@@ -8,8 +8,8 @@ public class limelightGroupCommand extends SequentialCommandGroup {
     
     public limelightGroupCommand(DriveTrain drivetrain, LimeLight limelight){
         addCommands(
-            new modifiedAim(drivetrain, limelight),
-            new modifiedRange(drivetrain, limelight)
+            new modifiedRange(drivetrain, limelight, 4),
+            new modifiedAim(drivetrain, limelight)
         );
     }
     

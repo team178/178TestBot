@@ -15,8 +15,8 @@ public class LimeLight extends SubsystemBase {
 
     private boolean isConnected = false;
     
-    private double lensHeight = 0; // Input height of the center of the limelight lens relative to the floor in meters
-    private double mountAngle = 0; // Input how many degrees back is limelight rotated from perfectly vertical
+    private double lensHeight = .2032; // Input height of the center of the limelight lens relative to the floor in meters
+    private double mountAngle = 27.5; // Input how many degrees back is limelight rotated from perfectly vertical
 
     public LimeLight() {
         table = NetworkTableInstance.getDefault().getTable("limelight");
@@ -121,6 +121,7 @@ public class LimeLight extends SubsystemBase {
         SmartDashboard.putNumber("LimelightX", getHorizontalDegToTarget());
         SmartDashboard.putNumber("LimelightY", getVerticalDegToTarget());
         SmartDashboard.putNumber("LimelightArea", getTargetArea());
+        SmartDashboard.putNumber("Limelight Distance", estimateDistance(2.4384));
     } 
 
     @Override
