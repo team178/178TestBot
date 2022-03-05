@@ -88,7 +88,7 @@ public class aimRange extends CommandBase {
     // Initialize Aim Fields
     KpAim = 0.008;
     minTurnSpeed = 0.365;
-    aimTolerance = 0.8;
+    aimTolerance = 0.4;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -100,7 +100,7 @@ public class aimRange extends CommandBase {
 
     if(!crosshairCalibrated){
         double currentDistance = m_limelight.estimateDistance(2.4384); // Input actually height from target later
-        rangeTolerance = 0.5;
+        rangeTolerance = 0.1;
         
         distanceError = desiredDistance - currentDistance;
         driveAdjust = KpMeter * Math.abs(distanceError);
@@ -114,13 +114,12 @@ public class aimRange extends CommandBase {
     }
 
     driveAdjust = ((Math.abs(driveAdjust) < minDriveSpeed) ? minDriveSpeed + Math.abs(driveAdjust) : driveAdjust); // Added the latter condition to ensure that if the drive adjust ends earlier than the turn adjust, the robot stops moving along the x axis
-    driveAdjust = ((distanceError > 0) ? driveAdjust: -driveAdjust);
+    driveAdjust = ((distanceError > 0) ? -driveAdjust: driveAdjust);
 
     turnAdjust = KpAim * headingError; // Multiplies our error by our speed constant, that way we have a useable speed
     turnAdjust = ((Math.abs(turnAdjust) < minTurnSpeed && Math.abs(headingError) > aimTolerance) ? minTurnSpeed + Math.abs(turnAdjust) : turnAdjust); // Ensures we don't go under min speed needed to turn
     turnAdjust = ((headingError > 0) ? turnAdjust : -turnAdjust); // Ensures correct directional change
 
-    System.out.println("Drive Adjust: " + driveAdjust + " Turn Adjust: " + turnAdjust);
     m_drivetrain.arcadeDrive(driveAdjust, turnAdjust);
   }
 

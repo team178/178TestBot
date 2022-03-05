@@ -11,6 +11,9 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.motorcontrol.MotorController;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.ADXRS450_Gyro;
+import edu.wpi.first.wpilibj.AnalogGyro;
+import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 
 import java.util.function.DoubleSupplier;
@@ -27,11 +30,15 @@ import frc.robot.Constants.DriveConstants;
  */
 public class DriveTrain extends SubsystemBase {
 
+  private final SPI.Port sPort = SPI.Port.kOnboardCS0;
+
   private final WPI_TalonSRX leftMaster = new WPI_TalonSRX(DriveConstants.kLeftMotor1Port);
   private final WPI_VictorSPX leftSlave = new WPI_VictorSPX(DriveConstants.kLeftMotor2Port);
 
   private final WPI_TalonSRX rightMaster = new WPI_TalonSRX(DriveConstants.kRightMotor1Port);
   private final WPI_VictorSPX rightSlave = new WPI_VictorSPX(DriveConstants.kRightMotor2Port);
+
+  private final ADXRS450_Gyro m_gyro = new ADXRS450_Gyro(sPort);
   
   //Encoder methods
   public DoubleSupplier leftPosition;
@@ -75,6 +82,7 @@ public class DriveTrain extends SubsystemBase {
     reset();
 
     addChild("Drive", m_drive);
+    addChild("Gyro", m_gyro);
   }
   
   /**
@@ -94,13 +102,24 @@ public class DriveTrain extends SubsystemBase {
    * @param rot the commanded rotation
    */
   public void arcadeDrive(double fwd, double rot) {
+    System.out.println("Drive Adjust: " + fwd + " Turn Adjust: " + rot);
     m_drive.arcadeDrive(fwd, rot);
+  }
+
+  public double getHeading(){
+    return m_gyro.getAngle();
+  }
+
+  /** Calibrates the gyro */
+  public void calibrate() {
+    m_gyro.calibrate();
   }
 
   /** Reset the robots sensors to the zero states. */
   public void reset() {
     leftMaster.setSelectedSensorPosition(0);
     rightMaster.setSelectedSensorPosition(0);
+    m_gyro.reset();
   }
 
   /**
@@ -155,6 +174,7 @@ public class DriveTrain extends SubsystemBase {
     SmartDashboard.putNumber("Right Distance", rightPosition.getAsDouble());
     SmartDashboard.putNumber("Left Speed", leftRate.getAsDouble());
     SmartDashboard.putNumber("Right Speed", rightRate.getAsDouble());
+    SmartDashboard.putNumber("Gyro", m_gyro.getAngle());
   }
 
   @Override

@@ -23,7 +23,7 @@ public class DriveStraight extends PIDCommand {
    */
   public DriveStraight(double distance, DriveTrain drivetrain) {
     super(
-        new PIDController(0.36805, 0, 0), drivetrain::getDistance, distance, d -> drivetrain.tankDrive(d, d));
+        new PIDController(4, 0, 0), drivetrain::getDistance, distance, d -> drivetrain.tankDrive(d, d));
 
     m_drivetrain = drivetrain;
     m_drivetrain.reset();

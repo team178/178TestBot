@@ -33,6 +33,7 @@ import frc.robot.Constants.OIConstants;
 import frc.robot.commands.ArcadeDrive;
 import frc.robot.commands.DriveStraight;
 import frc.robot.commands.TankDrive;
+import frc.robot.commands.TurnDegrees;
 import frc.robot.commands.aimRange;
 import frc.robot.commands.limelightGroupCommand;
 import frc.robot.commands.modifiedAim;
@@ -106,6 +107,8 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
+    m_controller.x
+      .whenPressed(new aimRange(m_drivetrain, m_limelight, 3.658));
   }
 
   private void configureShuffleBoard() {
@@ -147,8 +150,9 @@ public class RobotContainer {
     m_autoChooser.setDefaultOption("Modified Range", new modifiedRange(m_drivetrain, m_limelight, 4));
     m_autoChooser.addOption("Modified Aim", new modifiedAim(m_drivetrain, m_limelight));
     m_autoChooser.addOption("Range and Aim Sequential", new limelightGroupCommand(m_drivetrain, m_limelight));
-    m_autoChooser.addOption("Aim and Range", new aimRange(m_drivetrain, m_limelight));
-    //m_autoChooser.addOption("Drive Straight", new DriveStraight(2, m_drivetrain));
+    m_autoChooser.addOption("Aim and Range", new aimRange(m_drivetrain, m_limelight, 3.658));
+    m_autoChooser.addOption("Drive Straight", new DriveStraight(.5, m_drivetrain));
+    m_autoChooser.addOption("Turn Degrees", new TurnDegrees(90, m_drivetrain));
 
     //Creates new Shuffleboard tab called Drivebase
     ShuffleboardTab driveBaseTab = Shuffleboard.getTab("Drivebase");
