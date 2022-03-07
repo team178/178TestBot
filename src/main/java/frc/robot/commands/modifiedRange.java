@@ -70,7 +70,7 @@ public class modifiedRange extends CommandBase {
   @Override
   public void initialize() {
     KpAngle = 0.005;
-    KpMeter = .065;
+    KpMeter = .065; // Try a higher number, hopefully it will be faster while maintaining it's accuracy 
 
     angleTolerance = 0.1;
     meterTolerance = 0.1;
