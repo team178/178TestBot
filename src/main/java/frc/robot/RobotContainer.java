@@ -7,6 +7,8 @@ package frc.robot;
 import java.util.Map;
 import java.util.function.DoubleSupplier;
 
+import org.photonvision.PhotonCamera;
+
 import com.fasterxml.jackson.databind.ser.std.NumberSerializers.DoubleSerializer;
 
 import edu.wpi.first.cameraserver.CameraServer;
@@ -33,6 +35,7 @@ import frc.robot.Constants.OIConstants;
 import frc.robot.commands.ArcadeDrive;
 import frc.robot.commands.DriveStraight;
 import frc.robot.commands.TankDrive;
+import frc.robot.commands.TargetAim;
 import frc.robot.commands.TurnDegrees;
 import frc.robot.commands.aimRange;
 import frc.robot.commands.limelightGroupCommand;
@@ -49,7 +52,10 @@ import frc.robot.commands.modifiedRange;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   public final DriveTrain m_drivetrain = new DriveTrain();
-  private final LimeLight m_limelight = new LimeLight();
+  // private final LimeLight m_limelight = new LimeLight();
+
+  // Limelight with PhotonVision installed on it
+  public final PhotonCamera m_visionCamera = new PhotonCamera("limelight");
 
   //Creates joystick object for the Main and Aux controllers
   private final ConsoleController m_controller = new ConsoleController(0);
@@ -108,7 +114,7 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     m_controller.x
-      .whenPressed(new aimRange(m_drivetrain, m_limelight, 3.658));
+      .whenPressed(new TargetAim(m_visionCamera, m_drivetrain));
   }
 
   private void configureShuffleBoard() {
@@ -147,10 +153,10 @@ public class RobotContainer {
     m_driveChooser.addOption("Arcade Drive", new ArcadeDrive(m_driveAxis1, m_driveAxis2, m_drivetrain));
 
     //Autonomous Chooser Options (How our robot is going to tackle auto)
-    m_autoChooser.setDefaultOption("Modified Range", new modifiedRange(m_drivetrain, m_limelight, 4));
-    m_autoChooser.addOption("Modified Aim", new modifiedAim(m_drivetrain, m_limelight));
-    m_autoChooser.addOption("Range and Aim Sequential", new limelightGroupCommand(m_drivetrain, m_limelight));
-    m_autoChooser.addOption("Aim and Range", new aimRange(m_drivetrain, m_limelight, 3.658));
+    // m_autoChooser.setDefaultOption("Modified Range", new modifiedRange(m_drivetrain, m_limelight, 4));
+    // m_autoChooser.addOption("Modified Aim", new modifiedAim(m_drivetrain, m_limelight));
+    // m_autoChooser.addOption("Range and Aim Sequential", new limelightGroupCommand(m_drivetrain, m_limelight));
+    // m_autoChooser.addOption("Aim and Range", new aimRange(m_drivetrain, m_limelight, 3.658));
     m_autoChooser.addOption("Drive Straight", new DriveStraight(.5, m_drivetrain));
     m_autoChooser.addOption("Turn Degrees", new TurnDegrees(90, m_drivetrain));
 
@@ -206,8 +212,8 @@ public class RobotContainer {
             .withProperties(Map.of("Label position", "HIDDEN")); // hide labels for commands
     
     //Adds buttons to the aforementioned Layout that run Limelight related commands when selected
-    limelightCommands.add(new modifiedAim(m_drivetrain, m_limelight));
-    limelightCommands.add(new modifiedRange(m_drivetrain, m_limelight));
+    // limelightCommands.add(new modifiedAim(m_drivetrain, m_limelight));
+    // limelightCommands.add(new modifiedRange(m_drivetrain, m_limelight));
 
     //Adds a Layout (basically a empty list) to the Drivebase tab for Drive Commands which will allow drivers to change from TankDrive to Arcade drive (or any drive command) on the spot  
     ShuffleboardLayout driveCommands = driveBaseTab
