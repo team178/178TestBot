@@ -50,11 +50,12 @@ public class TargetAim extends CommandBase {
 
         if (result.hasTargets()) {
             rotationSpeed = -m_turnController.calculate(result.getBestTarget().getYaw(), 0);
+            rotationSpeed = rotationSpeed < .365 && rotationSpeed > 0 ? .365 : rotationSpeed;
         } else {
             rotationSpeed = 0;
         }
-
-        m_drivetrain.arcadeDrive(0, rotationSpeed);
+        System.out.println(rotationSpeed);
+        m_drivetrain.tankDrive(rotationSpeed, -rotationSpeed);
     }
 
     // Called once the command ends or is interrupted.

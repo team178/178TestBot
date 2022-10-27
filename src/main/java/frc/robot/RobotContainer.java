@@ -83,7 +83,8 @@ public class RobotContainer {
     //m_drivetrain.setDefaultCommand(
         //new TankDrive(m_joystick::getLeftStickY, m_joystick::getRightStickY, m_drivetrain));
 
-    if(RobotBase.isReal()){
+    // Cameras are disabled!!!!!!
+    if(false){
       //Camera 1
       camera1 = CameraServer.startAutomaticCapture("cam0", 0);
       //camera1.setResolution(160, 90);
@@ -102,8 +103,8 @@ public class RobotContainer {
     }
 
     // Configure the button bindings
-    configureButtonBindings();
     configureShuffleBoard();
+    configureButtonBindings();
   }
 
   /**
@@ -114,7 +115,7 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     m_controller.x
-      .whenPressed(new TargetAim(m_visionCamera, m_drivetrain));
+      .whenHeld(new TargetAim(m_visionCamera, m_drivetrain));
   }
 
   private void configureShuffleBoard() {

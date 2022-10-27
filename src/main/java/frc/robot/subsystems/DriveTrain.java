@@ -102,7 +102,6 @@ public class DriveTrain extends SubsystemBase {
    * @param rot the commanded rotation
    */
   public void arcadeDrive(double fwd, double rot) {
-    System.out.println("Drive Adjust: " + fwd + " Turn Adjust: " + rot);
     m_drive.arcadeDrive(fwd, rot);
   }
 
