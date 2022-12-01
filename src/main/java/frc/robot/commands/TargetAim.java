@@ -26,7 +26,7 @@ public class TargetAim extends CommandBase {
     public TargetAim(PhotonCamera camera, DriveTrain drivetrain) {
         m_camera = camera;
         m_drivetrain = drivetrain;
-        m_turnController = new PIDController(Constants.DriveConstants.kTurnP.getDouble(0), 0, 0);
+        m_turnController = new PIDController(105.56, 0, 0);
 
         // Use addRequirements() here to declare subsystem dependencies.
         addRequirements(drivetrain);
