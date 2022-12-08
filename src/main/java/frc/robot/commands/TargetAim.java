@@ -26,7 +26,7 @@ public class TargetAim extends CommandBase {
     public TargetAim(PhotonCamera camera, DriveTrain drivetrain) {
         m_camera = camera;
         m_drivetrain = drivetrain;
-        m_turnController = new PIDController(105.56, 0, 0);
+        m_turnController = new PIDController(0.05, 0, 0);
 
         // Use addRequirements() here to declare subsystem dependencies.
         addRequirements(drivetrain);
@@ -50,12 +50,12 @@ public class TargetAim extends CommandBase {
 
         if (result.hasTargets()) {
             rotationSpeed = -m_turnController.calculate(result.getBestTarget().getYaw(), 0);
-            rotationSpeed = rotationSpeed < .365 && rotationSpeed > 0 ? .365 : rotationSpeed;
+            rotationSpeed = rotationSpeed > 0.5 ? 0.5 : rotationSpeed;
         } else {
             rotationSpeed = 0;
         }
         System.out.println(rotationSpeed);
-        m_drivetrain.tankDrive(rotationSpeed, -rotationSpeed);
+        m_drivetrain.arcadeDrive(0, rotationSpeed);
     }
 
     // Called once the command ends or is interrupted.
