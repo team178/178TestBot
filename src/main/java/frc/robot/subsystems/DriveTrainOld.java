@@ -28,7 +28,7 @@ import frc.robot.Constants.DriveConstants;
 /**
  * Add your docs here.
  */
-public class DriveTrain extends SubsystemBase {
+public class DriveTrainOld extends SubsystemBase {
 
   private final SPI.Port sPort = SPI.Port.kOnboardCS0;
 
@@ -55,7 +55,7 @@ public class DriveTrain extends SubsystemBase {
   private final DifferentialDrive m_drive = new DifferentialDrive(m_leftMotor, m_rightMotor);
   
   /** Create a new drivetrain subsystem. */
-  public DriveTrain() {
+  public DriveTrainOld() {
     // We need to invert one side of the drivetrain so that positive voltages
     // result in both sides moving forward. Depending on how your robot's
     // gearbox is constructed, you might have to invert the left side instead.
@@ -73,10 +73,10 @@ public class DriveTrain extends SubsystemBase {
     leftMaster.setSensorPhase(false); // Technically these two setSensorPhase calls are redundant because setInverted should flip them for us 
     rightMaster.setSensorPhase(true); // Keeping it for now though as it ensures we have the right Sensor Phase
     
-    leftPosition = () -> leftMaster.getSelectedSensorPosition(0) * DriveConstants.kEncoderDistancePerPulse; 
-    leftRate = () -> leftMaster.getSelectedSensorVelocity(0) * DriveConstants.kEncoderDistancePerPulse * 10; // Gives Velocity in Rotations per Second
-    rightPosition = () -> rightMaster.getSelectedSensorPosition(0) * DriveConstants.kEncoderDistancePerPulse; 
-    rightRate = () -> rightMaster.getSelectedSensorVelocity(0) * DriveConstants.kEncoderDistancePerPulse * 10; // Gives Velocity in Rotations per Second
+    // leftPosition = () -> leftMaster.getSelectedSensorPosition(0) * DriveConstants.kEncoderDistancePerPulse; 
+    // leftRate = () -> leftMaster.getSelectedSensorVelocity(0) * DriveConstants.kEncoderDistancePerPulse * 10; // Gives Velocity in Rotations per Second
+    // rightPosition = () -> rightMaster.getSelectedSensorPosition(0) * DriveConstants.kEncoderDistancePerPulse; 
+    // rightRate = () -> rightMaster.getSelectedSensorVelocity(0) * DriveConstants.kEncoderDistancePerPulse * 10; // Gives Velocity in Rotations per Second
 
     m_drive.setSafetyEnabled(false);
     reset();
