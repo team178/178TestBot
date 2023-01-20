@@ -55,14 +55,14 @@ public final class Constants {
     public static final double kEncoderDistancePerRev = 2 * kWheelDiameter * Math.PI;
     public static final double kGearboxRatio = 10.71;
 
-    public static final double kTrackWidth = Units.inchesToMeters(27);
+    public static final double kTrackWidth = Units.inchesToMeters(22);
     public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(kTrackWidth);
 
-    public static final double kS = 1; //! Need to be tuned
-    public static final double kV = 3;
-    public static final double kA = 1;
+    public static final double kS = 0.91843; //! Need to be tuned
+    public static final double kV = 33.753;
+    public static final double kA = 6.124;
 
-    public static final double kPVel = 1;
+    public static final double kPVel = 5.1978;
 
   }
   

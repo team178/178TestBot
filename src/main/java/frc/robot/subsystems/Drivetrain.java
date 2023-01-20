@@ -64,6 +64,7 @@ public class Drivetrain extends SubsystemBase {
     m_rightMotor.setSensorPhase(false);
 
     //! Will need to be adjusted until we're going the right direction
+    // Teleop drive input is inverted in arcadeDrive command to be compatible with autos
     m_leftMotor.setInverted(false);
     m_rightMotor.setInverted(true);
 
@@ -183,7 +184,7 @@ public class Drivetrain extends SubsystemBase {
   
   public void arcadeDrive(double forward, double rot) {
     var wheelSpeeds = DriveConstants.kDriveKinematics.toWheelSpeeds(
-      new ChassisSpeeds(forward, 0.0, rot)
+      new ChassisSpeeds(-forward, 0.0, rot)
     );
     setWheelSpeeds(wheelSpeeds);
   }

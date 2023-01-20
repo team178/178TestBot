@@ -84,6 +84,9 @@ public class RobotContainer {
 
     PathPlannerServer.startServer(5811);
 
+    m_drivetrain.resetEncoders();
+    m_drivetrain.resetGyro();
+
      // Sets driving to either the main joystick or aux xbox controller (Note to self make method in Joysticks that adjust for thrust and twist)
     
      //m_drivetrain.setDefaultCommand(
@@ -123,7 +126,7 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     m_drivetrain.setDefaultCommand(
-        m_drivetrain.arcadeDrive(m_controller::getLeftY, m_controller::getRightY, 0.2)
+        m_drivetrain.arcadeDrive(m_controller::getLeftY, m_controller::getRightX, 0.2)
     );
 
     // m_controller.x
