@@ -52,8 +52,9 @@ public final class Constants {
 
     public static final int kEncoderCPR = 4096; // MagCoder constant
     public static final double kWheelDiameter = Units.inchesToMeters(6);
-    public static final double kEncoderDistancePerRev = 2 * kWheelDiameter * Math.PI;
-    public static final double kGearboxRatio = 10.71;
+    public static final double kEncoderDistancePerRev = 2 * (kWheelDiameter / 2) * Math.PI;
+    public static final double kGearboxRatio = 1;
+    // Gearbox ratio 1:1 because mag encoders attached to output shaft whereas falcons are before the gearbox
 
     public static final double kTrackWidth = Units.inchesToMeters(22);
     public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(kTrackWidth);

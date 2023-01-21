@@ -20,6 +20,7 @@ import edu.wpi.first.cscore.VideoMode.PixelFormat;
 import edu.wpi.first.math.controller.RamseteController;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
@@ -74,7 +75,7 @@ public class RobotContainer {
     m_drivetrain::resetPose,
     new RamseteController(),
     DriveConstants.kDriveKinematics,
-    m_drivetrain::tankDriveVolts,
+    m_drivetrain::setWheelSpeeds,
     Autos.eventMap,
     m_drivetrain
   );
@@ -83,6 +84,9 @@ public class RobotContainer {
   public RobotContainer() {
 
     PathPlannerServer.startServer(5811);
+
+    Preferences.initDouble("b", 2.0);
+    Preferences.initDouble("zeta", 0.7);
 
     m_drivetrain.resetEncoders();
     m_drivetrain.resetGyro();
@@ -266,8 +270,8 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("TestPath", new PathConstraints(1, 3));
-    return m_autoBuilder.fullAuto(pathGroup);
+    PathPlannerTrajectory pathGroup = PathPlanner.loadPath("TestPath", new PathConstraints(0.5, 1));
+    return m_autoBuilder.fullAuto(pathGroup).andThen(() -> System.out.println("DONE!"));
   }
 
   // public void setDriveCommand(){

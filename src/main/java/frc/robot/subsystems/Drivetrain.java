@@ -165,11 +165,15 @@ public class Drivetrain extends SubsystemBase {
   }
 
   public void setWheelSpeeds(DifferentialDriveWheelSpeeds speeds) {
-    final double leftFeedforward = m_feedforward.calculate(speeds.leftMetersPerSecond);
-    final double rightFeedforward = m_feedforward.calculate(speeds.rightMetersPerSecond);
+    setWheelSpeeds(speeds.leftMetersPerSecond, speeds.rightMetersPerSecond);
+  }
 
-    final double leftOutput = m_leftPIDController.calculate(getLeftEncoderVelocityMeters(), speeds.leftMetersPerSecond);
-    final double rightOutput = m_rightPIDController.calculate(getRightEncoderVelocityMeters(), speeds.rightMetersPerSecond);
+  public void setWheelSpeeds(double leftSpeed, double rightSpeed) {
+    final double leftFeedforward = m_feedforward.calculate(leftSpeed);
+    final double rightFeedforward = m_feedforward.calculate(rightSpeed);
+
+    final double leftOutput = m_leftPIDController.calculate(getLeftEncoderVelocityMeters(), leftSpeed);
+    final double rightOutput = m_rightPIDController.calculate(getRightEncoderVelocityMeters(), rightSpeed);
     tankDriveVolts(leftOutput + leftFeedforward, rightOutput + rightFeedforward);
   }
   
@@ -202,6 +206,8 @@ public class Drivetrain extends SubsystemBase {
 
     SmartDashboard.putNumber("LEncoderM", getLeftEncoderPositionMeters());
     SmartDashboard.putNumber("REncoderM", getRightEncoderPositionMeters());
+
+    SmartDashboard.putData(m_gyro);
   }
 
   @Override
