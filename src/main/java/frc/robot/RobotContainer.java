@@ -271,7 +271,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     PathPlannerTrajectory pathGroup = PathPlanner.loadPath("TestPath", new PathConstraints(0.5, 1));
-    return m_autoBuilder.fullAuto(pathGroup).andThen(() -> System.out.println("DONE!"));
+    return m_autoBuilder.followPath(pathGroup).andThen(() -> System.out.println("DONE!"));
   }
 
   // public void setDriveCommand(){
