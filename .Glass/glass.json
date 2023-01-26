@@ -1,21 +1,50 @@
 {
   "NetworkTables": {
+    "Persistent Values": {
+      "open": false
+    },
     "SmartDashboard": {
       "Drive Routine": {
         "open": true
       },
       "open": true
     },
+    "transitory": {
+      "limelight": {
+        "open": true
+      }
+    },
     "types": {
       "/FMSInfo": "FMSInfo",
       "/LiveWindow/DriveTrain/Drive": "DifferentialDrive",
+      "/LiveWindow/DriveTrain/Gyro": "Gyro",
+      "/LiveWindow/Ungrouped/PIDController[1]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[2]": "PIDController",
       "/LiveWindow/Ungrouped/Scheduler": "Scheduler",
+      "/Shuffleboard/Drivebase/Autonomous Routine": "String Chooser",
+      "/Shuffleboard/Drivebase/Drive Axis 1": "String Chooser",
+      "/Shuffleboard/Drivebase/Drive Axis 2": "String Chooser",
+      "/Shuffleboard/Drivebase/Drive Commands/Arcade Drive": "Command",
+      "/Shuffleboard/Drivebase/Drive Commands/Tank Drive": "Command",
+      "/Shuffleboard/Drivebase/Drive Routine": "String Chooser",
+      "/SmartDashboard/ADXRS450_Gyro[0]": "Gyro",
       "/SmartDashboard/Autonomous Routine": "String Chooser",
-      "/SmartDashboard/Drive Routine": "String Chooser"
+      "/SmartDashboard/Drive Routine": "String Chooser",
+      "/SmartDashboard/Field": "Field2d"
+    },
+    "windows": {
+      "/SmartDashboard/Field": {
+        "height": 8.013801574707031,
+        "units": "feet",
+        "width": 16.54149627685547,
+        "window": {
+          "visible": true
+        }
+      }
     }
   },
   "NetworkTables Settings": {
-    "mode": "Client",
+    "mode": "Client (NT3)",
     "serverTeam": "178"
   }
 }

@@ -19,8 +19,12 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -197,6 +201,20 @@ public class Drivetrain extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     m_poseEstimator.update(getGyroRotation(), getRightEncoderPositionMeters(), getRightEncoderPositionMeters());
+    NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
+    if(table.containsKey("botpose")) {
+      double[] botpose = table.getEntry("botpose").getDoubleArray(new double[1]);
+      
+      if (botpose.length > 0) {
+        m_poseEstimator.addVisionMeasurement(
+          new Pose2d(botpose[0], -botpose[1], Rotation2d.fromDegrees(botpose[5])),
+          Timer.getFPGATimestamp()
+        );
+      }
+
+    }
+    
+
     m_field.setRobotPose(m_poseEstimator.getEstimatedPosition());
 
     SmartDashboard.putData(m_field);
