@@ -184,15 +184,15 @@ public class Drivetrain extends SubsystemBase {
   public Command arcadeDrive(DoubleSupplier forward, DoubleSupplier rot, double deadzone) {
     return this.run(() -> {
       arcadeDrive(
-          MathUtil.applyDeadband(forward.getAsDouble(), deadzone),
-          MathUtil.applyDeadband(rot.getAsDouble(), deadzone)
+          MathUtil.applyDeadband(forward.getAsDouble(), deadzone) * 0.1,
+          MathUtil.applyDeadband(rot.getAsDouble(), deadzone) * 0.3
           );
     }).repeatedly();
   }
   
   public void arcadeDrive(double forward, double rot) {
     var wheelSpeeds = DriveConstants.kDriveKinematics.toWheelSpeeds(
-      new ChassisSpeeds(-forward, 0.0, rot)
+      new ChassisSpeeds(-forward, 0.0, -rot)
     );
     setWheelSpeeds(wheelSpeeds);
   }
