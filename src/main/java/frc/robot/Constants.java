@@ -18,6 +18,12 @@ import edu.wpi.first.networktables.NetworkTableEntry;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+
+  public static final class FieldConstants {
+    public static final double kFieldWidth = Units.inchesToMeters((26 * 12) + 3.5);
+    public static final double kFieldLength = Units.inchesToMeters((54 * 12) + 3.25);
+  }
+
   public static final class DriveConstants {
 
     //! OLD CONSTANTS

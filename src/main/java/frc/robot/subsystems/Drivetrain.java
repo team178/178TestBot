@@ -31,6 +31,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.FieldConstants;
 
 public class Drivetrain extends SubsystemBase {
   
@@ -203,15 +204,23 @@ public class Drivetrain extends SubsystemBase {
     m_poseEstimator.update(getGyroRotation(), getRightEncoderPositionMeters(), getRightEncoderPositionMeters());
     NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
     if(table.containsKey("botpose")) {
-      double[] botpose = table.getEntry("botpose").getDoubleArray(new double[1]);
+      double[] botposeEntry = table.getEntry("botpose").getDoubleArray(new double[1]);
       
-      if (botpose.length > 0) {
+      if (botposeEntry.length > 0) {
+        // The pose from limelight for some reason has it's orign in the middle of the field instead
+        // of the bottom left like the WPILib pose estimator, so we have to account for that
+        Pose2d botpose = new Pose2d(
+            botposeEntry[0] + FieldConstants.kFieldLength / 2,
+            botposeEntry[1] +  FieldConstants.kFieldWidth / 2,
+            Rotation2d.fromDegrees(botposeEntry[5])
+        );
+
         m_poseEstimator.addVisionMeasurement(
-          new Pose2d(botpose[0], -botpose[1], Rotation2d.fromDegrees(botpose[5])),
-          Timer.getFPGATimestamp()
+            botpose,
+            Timer.getFPGATimestamp()
         );
       }
-
+      
     }
     
 
