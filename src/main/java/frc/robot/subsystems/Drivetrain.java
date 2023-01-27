@@ -12,6 +12,10 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.Nat;
+import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
@@ -19,6 +23,8 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -86,6 +92,13 @@ public class Drivetrain extends SubsystemBase {
       getRightEncoderPositionMeters(),
       new Pose2d()
     );
+
+    Matrix<N3, N1> stupidTrustMatrix = new Matrix<N3, N1>(N3.instance, N1.instance);
+    stupidTrustMatrix.set(0, 0, 1);
+    stupidTrustMatrix.set(1, 0, 1);
+    stupidTrustMatrix.set(2, 0, 1);
+
+    m_poseEstimator.setVisionMeasurementStdDevs(stupidTrustMatrix);
   }
 
   public void resetGyro() {

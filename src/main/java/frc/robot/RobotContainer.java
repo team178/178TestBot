@@ -80,6 +80,8 @@ public class RobotContainer {
     m_drivetrain
   );
 
+  private final PathPlannerTrajectory pathGroup = PathPlanner.loadPath("TestPath", new PathConstraints(0.5, 1));
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
 
@@ -270,7 +272,6 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    PathPlannerTrajectory pathGroup = PathPlanner.loadPath("TestPath", new PathConstraints(0.5, 1));
     return m_autoBuilder.followPath(pathGroup).andThen(() -> System.out.println("DONE!"));
   }
 
