@@ -13,7 +13,6 @@ import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.Matrix;
-import edu.wpi.first.math.Nat;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.controller.PIDController;
@@ -23,9 +22,6 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
-import edu.wpi.first.math.numbers.N1;
-import edu.wpi.first.math.numbers.N3;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
@@ -59,6 +55,8 @@ public class Drivetrain extends SubsystemBase {
 
   private final Field2d m_field = new Field2d();
 
+  private final Matrix<N3, N1> stupidTrustMatrix;
+
   /* Creates a new Drivetrain. */
   public Drivetrain() {
 
@@ -85,6 +83,8 @@ public class Drivetrain extends SubsystemBase {
     m_leftMotor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute);
     m_rightMotor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute);
 
+    m_gyro.calibrate();
+
     m_poseEstimator = new DifferentialDrivePoseEstimator(
       DriveConstants.kDriveKinematics,
       getGyroRotation(),
@@ -93,10 +93,10 @@ public class Drivetrain extends SubsystemBase {
       new Pose2d()
     );
 
-    Matrix<N3, N1> stupidTrustMatrix = new Matrix<N3, N1>(N3.instance, N1.instance);
-    stupidTrustMatrix.set(0, 0, 1);
-    stupidTrustMatrix.set(1, 0, 1);
-    stupidTrustMatrix.set(2, 0, 1);
+    stupidTrustMatrix = new Matrix<N3, N1>(N3.instance, N1.instance);
+    stupidTrustMatrix.set(0, 0, 3);
+    stupidTrustMatrix.set(1, 0, 3);
+    stupidTrustMatrix.set(2, 0, 3);
 
     m_poseEstimator.setVisionMeasurementStdDevs(stupidTrustMatrix);
   }
@@ -187,6 +187,14 @@ public class Drivetrain extends SubsystemBase {
   }
 
   public void setWheelSpeeds(double leftSpeed, double rightSpeed) {
+    
+    if (leftSpeed > 0.1) {
+      leftSpeed = 0.15;
+    }
+    if (rightSpeed > 0.1) {
+      rightSpeed = 0.15;
+    }
+
     final double leftFeedforward = m_feedforward.calculate(leftSpeed);
     final double rightFeedforward = m_feedforward.calculate(rightSpeed);
 
@@ -230,7 +238,8 @@ public class Drivetrain extends SubsystemBase {
 
         m_poseEstimator.addVisionMeasurement(
             botpose,
-            Timer.getFPGATimestamp()
+            Timer.getFPGATimestamp(),
+            stupidTrustMatrix
         );
       }
       
