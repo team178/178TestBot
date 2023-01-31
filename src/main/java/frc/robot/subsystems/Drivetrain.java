@@ -188,10 +188,10 @@ public class Drivetrain extends SubsystemBase {
 
   public void setWheelSpeeds(double leftSpeed, double rightSpeed) {
     
-    if (leftSpeed > 0.1) {
+    if (leftSpeed > 0.15) {
       leftSpeed = 0.15;
     }
-    if (rightSpeed > 0.1) {
+    if (rightSpeed > 0.15) {
       rightSpeed = 0.15;
     }
 
