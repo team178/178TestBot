@@ -18,7 +18,7 @@ public class Pulse extends SubsystemBase
 
   public Pulse() {
     initStrip(0, 60);
-    //initLights(m_lightBar, m_lightBarBuffer, 2, 8);
+    //initBar(2, 8);
   }
 
   private Command m_autonomousCommand;
