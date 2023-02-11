@@ -140,6 +140,7 @@ public class RobotContainer {
     // m_controller.x
     //   .whenHeld(new TargetAim(m_visionCamera, m_drivetrain));
 
+    m_controller.a().onTrue(m_pulse.runLightsOff());
     m_controller.b().onTrue(m_pulse.runRedBlue());
     m_controller.b().onFalse(m_pulse.runLightsOff());
   }

@@ -17,8 +17,8 @@ public class Pulse extends SubsystemBase
 {
 
   public Pulse() {
-    initStrip(0, 60);
-    //initBar(2, 8);
+    //initStrip(0, 60);
+    initBar(2, 8);
   }
 
   private Command m_autonomousCommand;
@@ -30,8 +30,8 @@ public class Pulse extends SubsystemBase
 
   @Override
   public void periodic() {
-    m_ledStrip.setData(m_ledStripBuffer);
-    // m_lightBar.setData(m_lightBarBuffer);
+    // m_ledStrip.setData(m_ledStripBuffer);
+    m_lightBar.setData(m_lightBarBuffer);
 
   }
 
@@ -60,12 +60,12 @@ public class Pulse extends SubsystemBase
 
   public Command runRedBlue(){
     return startEnd(
-      () -> setColors(m_ledStripBuffer, new Color(255, 0, 0), new Color(0, 0, 255)),
-      () -> lightsOff(m_ledStripBuffer));
+      () -> setColors(m_lightBarBuffer, new Color(255, 0, 0), new Color(0, 0, 255)),
+      () -> lightsOff(m_lightBarBuffer));
   }
 
   public Command runLightsOff() {
-    return run(() -> lightsOff(m_ledStripBuffer));
+    return run(() -> lightsOff(m_lightBarBuffer));
   }
 
 }
