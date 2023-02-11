@@ -32,6 +32,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.LimeLight;
+import frc.robot.subsystems.Pulse;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -50,7 +51,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   public final Drivetrain m_drivetrain = new Drivetrain();
   // private final LimeLight m_limelight = new LimeLight();
-
+  public final Pulse m_pulse = new Pulse();
   // Limelight with PhotonVision installed on it
   // public final PhotonCamera m_visionCamera = new PhotonCamera("limelight");
 
@@ -84,6 +85,7 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+
 
     PathPlannerServer.startServer(5811);
 
@@ -137,6 +139,9 @@ public class RobotContainer {
 
     // m_controller.x
     //   .whenHeld(new TargetAim(m_visionCamera, m_drivetrain));
+
+    m_controller.b().onTrue(m_pulse.runRedBlue());
+    m_controller.b().onFalse(m_pulse.runLightsOff());
   }
 
   private void configureShuffleBoard() {
