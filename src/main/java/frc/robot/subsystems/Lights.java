@@ -42,11 +42,11 @@ public class Lights extends SubsystemBase {
 
   
   private void yellow() {
-    setColor(new Color(255, 255, 0));
+    setColor(new Color(255, 200, 0));
   }
 
   private void purple() {
-    setColor(new Color(150, 0, 255));
+    setColor(new Color(90, 0, 100));
   }
 
   public Command runOff() {
