@@ -34,7 +34,9 @@ public class Robot extends TimedRobot {
     // and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
+   
   }
+
 
   @Override
   public void robotPeriodic() {
@@ -46,10 +48,8 @@ public class Robot extends TimedRobot {
     // robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
-    
 
-    //redBlue();
-    //m_led.setData(m_ledBuffer);
+    
   }
 
   /*
@@ -117,6 +117,8 @@ public class Robot extends TimedRobot {
   
   @Override
   public void testPeriodic() {
+
+
 
   }
 
